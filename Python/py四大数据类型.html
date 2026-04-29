@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 四大核心数据结构整理</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            line-height: 1.8;
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* 头部样式 */
+        .header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* 导航栏 */
+        .nav {
+            background-color: #34495e;
+            padding: 0 30px;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .nav li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 15px 0;
+            display: inline-block;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav li a:hover {
+            color: #3498db;
+        }
+
+        /* 内容区域 */
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .section h3 {
+            color: #34495e;
+            font-size: 18px;
+            margin: 20px 0 10px;
+        }
+
+        /* 特性表格 */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .feature-table th, .feature-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .feature-table tr:hover {
+            background-color: #fafafa;
+        }
+
+        /* Python 代码高亮样式 - 匹配VS Code */
+        .code-block {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        /* Python 语法高亮配色（匹配 VS Code 亮色主题） */
+        .py-keyword { color: #0000ff; font-weight: bold; } /* 关键字 */
+        .py-string { color: #a31515; } /* 字符串 */
+        .py-comment { color: #008000; font-style: italic; } /* 注释 */
+        .py-function { color: #795e26; } /* 函数名 */
+        .py-variable { color: #001080; } /* 变量名 */
+        .py-number { color: #098658; } /* 数字 */
+        .py-punctuation { color: #000000; } /* 标点符号 */
+        .py-builtin { color: #795e26; } /* 内置函数/类型 */
+        .py-operator { color: #000000; } /* 运算符 */
+        .py-attribute { color: #001080; } /* 属性/方法 */
+        .py-class { color: #267f99; } /* 类名 */
+
+        /* 增删改操作表格样式 */
+        .operations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .operations-table th, .operations-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .operations-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .operations-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .operations-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .data-structure {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .method-name {
+            font-family: "Consolas", "Courier New", monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .method-desc {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            .section h2 {
+                font-size: 22px;
+            }
+
+            .feature-table th, .feature-table td {
+                padding: 10px;
+            }
+            
+            .operations-table th, .operations-table td {
+                padding: 8px 10px;
+            }
+
+            .nav ul {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>Python 四大核心数据结构详解</h1>
+            <p>列表（List）· 元组（Tuple）· 字典（Dictionary）· 集合（Set）</p>
+        </div>
+
+        <!-- 导航栏 -->
+        <div class="nav">
+            <ul>
+                <li><a href="#list">列表 List</a></li>
+                <li><a href="#tuple">元组 Tuple</a></li>
+                <li><a href="#dict">字典 Dictionary</a></li>
+                <li><a href="#set">集合 Set</a></li>
+                <li><a href="#operations">增删改操作</a></li>
+                <li><a href="#compare">整体对比</a></li>
+            </ul>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 列表 List -->
+            <section id="list" class="section">
+                <h2>1. 列表（List）</h2>
+                <p>有序、可变的元素集合，支持重复元素和混合数据类型，是 Python 中最常用的数据结构之一。</p>
+
+                <h3>核心特性</h3>
+                <table class="feature-table">
+                    <tr>
+                        <th>特性</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>定义符号</td>
+                        <td><code class="code-block">[元素1, 元素2, ...]</code></td>
+                    </tr>
+                    <tr>
+                        <td>有序性</td>
+                        <td>按插入顺序排列，支持索引访问</td>
+                    </tr>
+                    <tr>
+                        <td>可变性</td>
+                        <td>支持增、删、改元素（不创建新列表）</td>
+                    </tr>
+                    <tr>
+                        <td>重复性</td>
+                        <td>允许存在重复元素</td>
+                    </tr>
+                    <tr>
+                        <td>元素约束</td>
+                        <td>无约束，支持任意数据类型（包括嵌套）</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>有序可修改的数据集（如任务列表、记录集合）</td>
+                    </tr>
+                </table>
+
+                <h3>常用操作代码示例</h3>
+                <div class="code-block">
+                    <span class="py-comment"># 1. 定义列表</span><br>
+                    <span class="py-variable">lst</span> = <span class="py-punctuation">[</span><span class="py-number">1</span>, <span class="py-string">"a"</span>, <span class="py-keyword">True</span>, <span class="py-punctuation">[</span><span class="py-number">2</span>, <span class="py-number">3</span><span class="py-punctuation">]</span><span class="py-punctuation">]</span> <span class="py-comment"># 混合类型+嵌套</span><br><br>
+
+                    <span class="py-comment"># 2. 访问元素（索引/切片）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">lst</span><span class="py-punctuation">[</span><span class="py-number">0</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 正索引：1</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">lst</span><span class="py-punctuation">[</span><span class="py-number">-1</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 负索引：[2, 3]</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">lst</span><span class="py-punctuation">[</span><span class="py-number">1</span><span class="py-punctuation">:</span><span class="py-number">3</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 切片：["a", True]</span><br><br>
+
+                    <span class="py-comment"># 3. 增删改</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">append</span><span class="py-punctuation">(</span><span class="py-number">4</span><span class="py-punctuation">)</span> <span class="py-comment"># 末尾添加：[1, "a", True, [2,3], 4]</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">insert</span><span class="py-punctuation">(</span><span class="py-number">1</span>, <span class="py-string">"b"</span><span class="py-punctuation">)</span> <span class="py-comment"># 指定位置插入：[1, "b", "a", ...]</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">[</span><span class="py-number">0</span><span class="py-punctuation">]</span> = <span class="py-number">100</span> <span class="py-comment"># 修改元素：[100, "b", "a", ...]</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">pop</span><span class="py-punctuation">(</span><span class="py-number">2</span><span class="py-punctuation">)</span> <span class="py-comment"># 按索引删除：删除 "a"</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">remove</span><span class="py-punctuation">(</span><span class="py-keyword">True</span><span class="py-punctuation">)</span> <span class="py-comment"># 按值删除：删除 True</span><br><br>
+
+                    <span class="py-comment"># 4. 其他常用方法</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">extend</span><span class="py-punctuation">(</span><span class="py-punctuation">[</span><span class="py-number">5</span>, <span class="py-number">6</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 扩展列表：[100, "b", [2,3], 4,5,6]</span><br>
+                    <span class="py-variable">lst</span><span class="py-punctuation">.</span><span class="py-attribute">sort</span><span class="py-punctuation">(</span><span class="py-punctuation">)</span> <span class="py-comment"># 排序（仅同类型元素可用）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">lst</span><span class="py-punctuation">)</span>
+                </div>
+            </section>
+
+            <!-- 元组 Tuple -->
+            <section id="tuple" class="section">
+                <h2>2. 元组（Tuple）</h2>
+                <p>有序、不可变的元素集合，支持重复元素和混合数据类型，比列表更轻量、访问速度更快。</p>
+
+                <h3>核心特性</h3>
+                <table class="feature-table">
+                    <tr>
+                        <th>特性</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>定义符号</td>
+                        <td><code class="code-block">(元素1, 元素2, ...)</code>（单个元素需加逗号：(5,)）</td>
+                    </tr>
+                    <tr>
+                        <td>有序性</td>
+                        <td>按插入顺序排列，支持索引访问</td>
+                    </tr>
+                    <tr>
+                        <td>可变性</td>
+                        <td>不可变（无法增删改元素，嵌套可变元素内部可改）</td>
+                    </tr>
+                    <tr>
+                        <td>重复性</td>
+                        <td>允许存在重复元素</td>
+                    </tr>
+                    <tr>
+                        <td>元素约束</td>
+                        <td>无约束，支持任意数据类型（包括嵌套）</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>固定数据集（如坐标、日期）、字典键、函数返回值</td>
+                    </tr>
+                </table>
+
+                <h3>常用操作代码示例</h3>
+                <div class="code-block">
+                    <span class="py-comment"># 1. 定义元组</span><br>
+                    <span class="py-variable">tpl</span> = <span class="py-punctuation">(</span><span class="py-number">1</span>, <span class="py-string">"a"</span>, <span class="py-keyword">True</span>, <span class="py-punctuation">(</span><span class="py-number">2</span>, <span class="py-number">3</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 混合类型+嵌套</span><br>
+                    <span class="py-variable">tpl_single</span> = <span class="py-punctuation">(</span><span class="py-number">5</span>,<span class="py-punctuation">)</span> <span class="py-comment"># 单个元素必须加逗号（否则视为普通类型）</span><br><br>
+
+                    <span class="py-comment"># 2. 访问元素（索引/切片）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">tpl</span><span class="py-punctuation">[</span><span class="py-number">1</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 正索引："a"</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">tpl</span><span class="py-punctuation">[</span><span class="py-number">-2</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 负索引：True</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">tpl</span><span class="py-punctuation">[</span><span class="py-number">0</span><span class="py-punctuation">:</span><span class="py-number">2</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 切片：(1, "a")（返回新元组）</span><br><br>
+
+                    <span class="py-comment"># 3. 不可变特性（以下代码会报错）</span><br>
+                    <span class="py-comment"># tpl[0] = 100 # 报错：不允许修改元素</span><br>
+                    <span class="py-comment"># tpl.append(4) # 报错：无 append 方法</span><br><br>
+
+                    <span class="py-comment"># 4. 合法操作</span><br>
+                    <span class="py-variable">tpl_new</span> = <span class="py-variable">tpl</span> <span class="py-operator">+</span> <span class="py-punctuation">(</span><span class="py-number">4</span>, <span class="py-number">5</span><span class="py-punctuation">)</span> <span class="py-comment"># 拼接：返回新元组</span><br>
+                    <span class="py-variable">tpl_repeat</span> = <span class="py-variable">tpl</span> <span class="py-operator">*</span> <span class="py-number">2</span> <span class="py-comment"># 重复：元素重复2次</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">tpl</span><span class="py-punctuation">.</span><span class="py-attribute">count</span><span class="py-punctuation">(</span><span class="py-string">"a"</span><span class="py-punctuation">)</span><span class="py-punctuation">)</span> <span class="py-comment"># 统计元素次数：1</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">tpl</span><span class="py-punctuation">.</span><span class="py-attribute">index</span><span class="py-punctuation">(</span><span class="py-number">1</span><span class="py-punctuation">)</span><span class="py-punctuation">)</span> <span class="py-comment"># 查找元素索引：0</span>
+                </div>
+            </section>
+
+            <!-- 字典 Dictionary -->
+            <section id="dict" class="section">
+                <h2>3. 字典（Dictionary）</h2>
+                <p>键值对映射的集合（Python 3.7+ 保证插入顺序），键唯一且不可变，值可任意，查询效率极高。</p>
+
+                <h3>核心特性</h3>
+                <table class="feature-table">
+                    <tr>
+                        <th>特性</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>定义符号</td>
+                        <td><code class="code-block">{key1: value1, key2: value2, ...}</code></td>
+                    </tr>
+                    <tr>
+                        <td>有序性</td>
+                        <td>Python 3.7+ 保证插入顺序，之前版本无序</td>
+                    </tr>
+                    <tr>
+                        <td>可变性</td>
+                        <td>支持增、删、改键值对</td>
+                    </tr>
+                    <tr>
+                        <td>重复性</td>
+                        <td>键唯一（重复键会覆盖），值可重复</td>
+                    </tr>
+                    <tr>
+                        <td>元素约束</td>
+                        <td>键：不可变类型（int/str/tuple）；值：任意类型</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>键值映射数据（如用户信息、配置参数、缓存）</td>
+                    </tr>
+                </table>
+
+                <h3>常用操作代码示例</h3>
+                <div class="code-block">
+                    <span class="py-comment"># 1. 定义字典</span><br>
+                    <span class="py-variable">dct</span> = <span class="py-punctuation">{</span><br>
+                    <span class="py-punctuation"> </span><span class="py-string">"name"</span>: <span class="py-string">"Tom"</span>,<br>
+                    <span class="py-punctuation"> </span><span class="py-string">"age"</span>: <span class="py-number">20</span>,<br>
+                    <span class="py-punctuation"> </span><span class="py-string">"is_student"</span>: <span class="py-keyword">True</span>,<br>
+                    <span class="py-punctuation"> </span><span class="py-string">"hobbies"</span>: <span class="py-punctuation">[</span><span class="py-string">"reading"</span>, <span class="py-string">"sports"</span><span class="py-punctuation">]</span><br>
+                    <span class="py-punctuation">}</span><br><br>
+
+                    <span class="py-comment"># 2. 访问值（键访问/get方法）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">dct</span><span class="py-punctuation">[</span><span class="py-string">"name"</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 直接访问："Tom"（键不存在报错）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">dct</span><span class="py-punctuation">.</span><span class="py-attribute">get</span><span class="py-punctuation">(</span><span class="py-string">"gender"</span>, <span class="py-string">"unknown"</span><span class="py-punctuation">)</span><span class="py-punctuation">)</span> <span class="py-comment"># get方法：键不存在返回默认值</span><br><br>
+
+                    <span class="py-comment"># 3. 增删改键值对</span><br>
+                    <span class="py-variable">dct</span><span class="py-punctuation">[</span><span class="py-string">"gender"</span><span class="py-punctuation">]</span> = <span class="py-string">"male"</span> <span class="py-comment"># 添加键值对</span><br>
+                    <span class="py-variable">dct</span><span class="py-punctuation">[</span><span class="py-string">"age"</span><span class="py-punctuation">]</span> = <span class="py-number">21</span> <span class="py-comment"># 修改值（键已存在）</span><br>
+                    <span class="py-keyword">del</span> <span class="py-variable">dct</span><span class="py-punctuation">[</span><span class="py-string">"is_student"</span><span class="py-punctuation">]</span> <span class="py-comment"># 按键删除</span><br>
+                    <span class="py-variable">dct</span><span class="py-punctuation">.</span><span class="py-attribute">pop</span><span class="py-punctuation">(</span><span class="py-string">"hobbies"</span><span class="py-punctuation">)</span> <span class="py-comment"># pop删除：返回删除的值</span><br><br>
+
+                    <span class="py-comment"># 4. 遍历字典</span><br>
+                    <span class="py-keyword">for</span> <span class="py-variable">key</span> <span class="py-keyword">in</span> <span class="py-variable">dct</span><span class="py-punctuation">.</span><span class="py-attribute">keys</span><span class="py-punctuation">(</span><span class="py-punctuation">)</span>:<br>
+                    <span class="py-punctuation"> </span><span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">key</span><span class="py-punctuation">)</span> <span class="py-comment"># 遍历所有键</span><br>
+                    <span class="py-keyword">for</span> <span class="py-variable">value</span> <span class="py-keyword">in</span> <span class="py-variable">dct</span><span class="py-punctuation">.</span><span class="py-attribute">values</span><span class="py-punctuation">(</span><span class="py-punctuation">)</span>:<br>
+                    <span class="py-punctuation"> </span><span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">value</span><span class="py-punctuation">)</span> <span class="py-comment"># 遍历所有值</span><br>
+                    <span class="py-keyword">for</span> <span class="py-variable">k</span>, <span class="py-variable">v</span> <span class="py-keyword">in</span> <span class="py-variable">dct</span><span class="py-punctuation">.</span><span class="py-attribute">items</span><span class="py-punctuation">(</span><span class="py-punctuation">)</span>:<br>
+                    <span class="py-punctuation"> </span><span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">k</span>, <span class="py-variable">v</span><span class="py-punctuation">)</span> <span class="py-comment"># 遍历键值对</span>
+                </div>
+            </section>
+
+            <!-- 集合 Set -->
+            <section id="set" class="section">
+                <h2>4. 集合（Set）</h2>
+                <p>无序、可变的元素集合，自动去重，支持高效的集合运算（交集、并集、差集）。</p>
+
+                <h3>核心特性</h3>
+                <table class="feature-table">
+                    <tr>
+                        <th>特性</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>定义符号</td>
+                        <td><code class="code-block">{元素1, 元素2, ...}</code>（空集合：set()）</td>
+                    </tr>
+                    <tr>
+                        <td>有序性</td>
+                        <td>无序，无法通过索引访问</td>
+                    </tr>
+                    <tr>
+                        <td>可变性</td>
+                        <td>支持增、删元素</td>
+                    </tr>
+                    <tr>
+                        <td>重复性</td>
+                        <td>自动去重，不允许重复元素</td>
+                    </tr>
+                    <tr>
+                        <td>元素约束</td>
+                        <td>元素必须是不可变类型（int/str/tuple）</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>去重、集合运算（如共同元素、差异元素）、高效成员判断</td>
+                    </tr>
+                </table>
+
+                <h3>常用操作代码示例</h3>
+                <div class="code-block">
+                    <span class="py-comment"># 1. 定义集合</span><br>
+                    <span class="py-variable">s</span> = <span class="py-punctuation">{</span><span class="py-number">1</span>, <span class="py-number">2</span>, <span class="py-number">3</span>, <span class="py-string">"a"</span>, <span class="py-punctuation">(</span><span class="py-number">4</span>, <span class="py-number">5</span><span class="py-punctuation">)</span><span class="py-punctuation">}</span> <span class="py-comment"># 元素为不可变类型</span><br>
+                    <span class="py-variable">empty_set</span> = <span class="py-builtin">set</span><span class="py-punctuation">(</span><span class="py-punctuation">)</span> <span class="py-comment"># 空集合（不能用 {}，{}是空字典）</span><br>
+                    <span class="py-variable">s_dup</span> = <span class="py-builtin">set</span><span class="py-punctuation">(</span><span class="py-punctuation">[</span><span class="py-number">1</span>, <span class="py-number">2</span>, <span class="py-number">2</span>, <span class="py-number">3</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 自动去重：{1,2,3}</span><br><br>
+
+                    <span class="py-comment"># 2. 增删元素</span><br>
+                    <span class="py-variable">s</span><span class="py-punctuation">.</span><span class="py-attribute">add</span><span class="py-punctuation">(</span><span class="py-number">6</span><span class="py-punctuation">)</span> <span class="py-comment"># 添加单个元素</span><br>
+                    <span class="py-variable">s</span><span class="py-punctuation">.</span><span class="py-attribute">update</span><span class="py-punctuation">(</span><span class="py-punctuation">[</span><span class="py-number">7</span>, <span class="py-number">8</span><span class="py-punctuation">]</span><span class="py-punctuation">)</span> <span class="py-comment"># 添加多个元素（可迭代对象）</span><br>
+                    <span class="py-variable">s</span><span class="py-punctuation">.</span><span class="py-attribute">remove</span><span class="py-punctuation">(</span><span class="py-number">2</span><span class="py-punctuation">)</span> <span class="py-comment"># 按值删除（元素不存在报错）</span><br>
+                    <span class="py-variable">s</span><span class="py-punctuation">.</span><span class="py-attribute">discard</span><span class="py-punctuation">(</span><span class="py-number">9</span><span class="py-punctuation">)</span> <span class="py-comment"># 按值删除（元素不存在不报错）</span><br><br>
+
+                    <span class="py-comment"># 3. 集合运算（核心功能）</span><br>
+                    <span class="py-variable">s1</span> = <span class="py-punctuation">{</span><span class="py-number">1</span>, <span class="py-number">2</span>, <span class="py-number">3</span>, <span class="py-number">4</span><span class="py-punctuation">}</span><br>
+                    <span class="py-variable">s2</span> = <span class="py-punctuation">{</span><span class="py-number">3</span>, <span class="py-number">4</span>, <span class="py-number">5</span>, <span class="py-number">6</span><span class="py-punctuation">}</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">s1</span> <span class="py-operator">|</span> <span class="py-variable">s2</span><span class="py-punctuation">)</span> <span class="py-comment"># 并集：{1,2,3,4,5,6}</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">s1</span> <span class="py-operator">&</span> <span class="py-variable">s2</span><span class="py-punctuation">)</span> <span class="py-comment"># 交集：{3,4}</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">s1</span> <span class="py-operator">-</span> <span class="py-variable">s2</span><span class="py-punctuation">)</span> <span class="py-comment"># 差集：s1有s2没有：{1,2}</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-variable">s1</span> <span class="py-operator">^</span> <span class="py-variable">s2</span><span class="py-punctuation">)</span> <span class="py-comment"># 对称差集：互不相同的元素：{1,2,5,6}</span><br><br>
+
+                    <span class="py-comment"># 4. 成员判断（效率 O(1)，比列表快）</span><br>
+                    <span class="py-builtin">print</span><span class="py-punctuation">(</span><span class="py-number">3</span> <span class="py-keyword">in</span> <span class="py-variable">s1</span><span class="py-punctuation">)</span> <span class="py-comment"># True</span>
+                </div>
+            </section>
+
+            <!-- 增删改操作总结 -->
+            <section id="operations" class="section">
+                <h2>5. 增删改操作总结</h2>
+                <p>下面是四大数据结构增删改操作的对比总结，使用表格形式便于对比和记忆：</p>
+                
+                <table class="operations-table">
+                    <tr>
+                        <th>数据结构</th>
+                        <th>增加</th>
+                        <th>删除（一个）</th>
+                        <th>删除（全部）</th>
+                        <th>修改</th>
+                    </tr>
+                    <tr>
+                        <td class="data-structure">列表（List）</td>
+                        <td>
+                            <span class="method-name">append(x)</span>
+                            <div class="method-desc">末尾添加元素</div>
+                            <span class="method-name">insert(i, x)</span>
+                            <div class="method-desc">指定位置插入</div>
+                            <span class="method-name">extend(iter)</span>
+                            <div class="method-desc">扩展列表</div>
+                        </td>
+                        <td>
+                            <span class="method-name">pop([i])</span>
+                            <div class="method-desc">按索引删除</div>
+                            <span class="method-name">remove(x)</span>
+                            <div class="method-desc">按值删除</div>
+                            <span class="method-name">del list[i]</span>
+                            <div class="method-desc">删除元素</div>
+                        </td>
+                        <td>
+                            <span class="method-name">clear()</span>
+                            <div class="method-desc">清空所有元素</div>
+                        </td>
+                        <td>
+                            <span class="method-name">list[i] = x</span>
+                            <div class="method-desc">索引赋值修改</div>
+                            <span class="method-name">切片赋值</span>
+                            <div class="method-desc">替换多个元素</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="data-structure">元组（Tuple）</td>
+                        <td>
+                            <span class="method-name">+ 运算符</span>
+                            <div class="method-desc">拼接返回新元组</div>
+                        </td>
+                        <td>
+                            <span class="method-name">不支持</span>
+                            <div class="method-desc">无法删除元素</div>
+                        </td>
+                        <td>
+                            <span class="method-name">del tuple</span>
+                            <div class="method-desc">只能删除整个元组</div>
+                        </td>
+                        <td>
+                            <span class="method-name">不支持</span>
+                            <div class="method-desc">元组不可变</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="data-structure">字典（Dictionary）</td>
+                        <td>
+                            <span class="method-name">dict[key]=value</span>
+                            <div class="method-desc">直接赋值添加</div>
+                            <span class="method-name">update([other])</span>
+                            <div class="method-desc">批量添加</div>
+                            <span class="method-name">setdefault(k[,d])</span>
+                            <div class="method-desc">不存在时添加</div>
+                        </td>
+                        <td>
+                            <span class="method-name">del dict[key]</span>
+                            <div class="method-desc">按键删除</div>
+                            <span class="method-name">pop(key[,d])</span>
+                            <div class="method-desc">删除并返回值</div>
+                            <span class="method-name">popitem()</span>
+                            <div class="method-desc">删除最后一项</div>
+                        </td>
+                        <td>
+                            <span class="method-name">clear()</span>
+                            <div class="method-desc">清空所有键值对</div>
+                        </td>
+                        <td>
+                            <span class="method-name">dict[key]=new_val</span>
+                            <div class="method-desc">直接修改值</div>
+                            <span class="method-name">update([other])</span>
+                            <div class="method-desc">批量更新</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="data-structure">集合（Set）</td>
+                        <td>
+                            <span class="method-name">add(elem)</span>
+                            <div class="method-desc">添加单个元素</div>
+                            <span class="method-name">update(*others)</span>
+                            <div class="method-desc">添加多个元素</div>
+                        </td>
+                        <td>
+                            <span class="method-name">remove(elem)</span>
+                            <div class="method-desc">按值删除（报错）</div>
+                            <span class="method-name">discard(elem)</span>
+                            <div class="method-desc">按值删除（安全）</div>
+                            <span class="method-name">pop()</span>
+                            <div class="method-desc">随机删除一个</div>
+                        </td>
+                        <td>
+                            <span class="method-name">clear()</span>
+                            <div class="method-desc">清空所有元素</div>
+                        </td>
+                        <td>
+                            <span class="method-name">不支持</span>
+                            <div class="method-desc">元素不可变</div>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- 整体对比 -->
+            <section id="compare" class="section">
+                <h2>6. 四大数据结构整体对比</h2>
+                <table class="feature-table">
+                    <tr>
+                        <th>对比维度</th>
+                        <th>列表（List）</th>
+                        <th>元组（Tuple）</th>
+                        <th>字典（Dictionary）</th>
+                        <th>集合（Set）</th>
+                    </tr>
+                    <tr>
+                        <td>定义符号</td>
+                        <td>[]</td>
+                        <td>()</td>
+                        <td>{key: value}</td>
+                        <td>{} / set()</td>
+                    </tr>
+                    <tr>
+                        <td>有序性</td>
+                        <td>是</td>
+                        <td>是</td>
+                        <td>是（3.7+）</td>
+                        <td>否</td>
+                    </tr>
+                    <tr>
+                        <td>可变性</td>
+                        <td>是</td>
+                        <td>否</td>
+                        <td>是</td>
+                        <td>是</td>
+                    </tr>
+                    <tr>
+                        <td>元素/键约束</td>
+                        <td>无约束</td>
+                        <td>无约束</td>
+                        <td>键：不可变类型</td>
+                        <td>元素：不可变类型</td>
+                    </tr>
+                    <tr>
+                        <td>重复性</td>
+                        <td>允许</td>
+                        <td>允许</td>
+                        <td>键唯一，值允许</td>
+                        <td>不允许（自动去重）</td>
+                    </tr>
+                    <tr>
+                        <td>访问方式</td>
+                        <td>索引</td>
+                        <td>索引</td>
+                        <td>键</td>
+                        <td>无（仅成员判断）</td>
+                    </tr>
+                    <tr>
+                        <td>核心优势</td>
+                        <td>有序可修改</td>
+                        <td>轻量、安全、高效</td>
+                        <td>快速键值查询</td>
+                        <td>去重、集合运算</td>
+                    </tr>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // 平滑滚动（点击导航跳转）
+        document.querySelectorAll(".nav a").forEach((anchor) => {
+            anchor.addEventListener("click", function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute("href");
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+    </script>
+</body>
+</html>

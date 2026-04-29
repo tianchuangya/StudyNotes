@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lambda 表达式完全指南</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        
+        h3 {
+            color: #16a085;
+            margin-top: 25px;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+            border-left: 5px solid #3498db;
+        }
+        
+        .comment { color: #a0aec0; font-style: italic; }
+        .keyword { color: #f56565; font-weight: bold; }
+        .type { color: #68d391; }
+        .string { color: #f6e05e; }
+        .number { color: #b794f4; }
+        .operator { color: #fc8181; }
+        
+        .tip-box {
+            background: #e6fffa;
+            border-left: 5px solid #38b2ac;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box {
+            background: #fed7d7;
+            border-left: 5px solid #e53e3e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .highlight {
+            background-color: #fff9db;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lambda 表达式完全指南</h1>
+        
+        <h2>什么是Lambda表达式？</h2>
+        <p>Lambda表达式是C++11引入的<span class="highlight">匿名函数</span>特性，允许在代码中内联定义函数，无需单独声明。</p>
+        
+        <div class="code-block">
+<span class="operator">[</span><span class="comment">捕获列表</span><span class="operator">]</span><span class="operator">(</span><span class="comment">参数列表</span><span class="operator">)</span> <span class="operator">{</span> <span class="comment">函数体</span> <span class="operator">}</span>
+        </div>
+        
+        <h2>Lambda的基本用法</h2>
+        
+        <h3>1. 立即执行的Lambda</h3>
+        <div class="code-block">
+<span class="comment">// 定义后立即调用</span><br>
+<span class="operator">[</span><span class="operator">]</span><span class="operator">(</span><span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> <span class="string">"Hello, Lambda!"</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">(</span><span class="operator">)</span><span class="operator">;</span> <span class="comment">// 输出: Hello, Lambda!</span>
+        </div>
+        
+        <h3>2. 带参数的Lambda</h3>
+        <div class="code-block">
+<span class="comment">// 接受参数并返回结果</span><br>
+<span class="keyword">auto</span> sum <span class="operator">=</span> <span class="operator">[</span><span class="operator">]</span><span class="operator">(</span><span class="type">int</span> a<span class="operator">,</span> <span class="type">int</span> b<span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> a <span class="operator">+</span> b<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> sum<span class="operator">(</span><span class="number">5</span><span class="operator">,</span> <span class="number">3</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 8</span>
+        </div>
+        
+        <h3>3. 赋值给变量的Lambda</h3>
+        <div class="code-block">
+<span class="comment">// Lambda可以赋值给auto变量</span><br>
+<span class="keyword">auto</span> greet <span class="operator">=</span> <span class="operator">[</span><span class="operator">]</span><span class="operator">(</span><span class="keyword">const</span> std<span class="operator">::</span>string<span class="operator">&amp;</span> name<span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> <span class="string">"Hello, "</span> <span class="operator">&lt;&lt;</span> name <span class="operator">&lt;&lt;</span> <span class="string">"!"</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+greet<span class="operator">(</span><span class="string">"Alice"</span><span class="operator">)</span><span class="operator">;</span> <span class="comment">// 输出: Hello, Alice!</span><br>
+greet<span class="operator">(</span><span class="string">"Bob"</span><span class="operator">)</span><span class="operator">;</span> <span class="comment">// 输出: Hello, Bob!</span>
+        </div>
+        
+        <div class="tip-box">
+            <strong>提示：</strong> 使用<span class="highlight">auto</span>关键字存储Lambda时，变量的类型是编译器生成的唯一闭包类型。如果需要明确指定类型，可以使用<span class="highlight">std::function</span>。
+        </div>
+        
+        <h2>捕获外部变量</h2>
+        <p>Lambda可以捕获其定义范围内的变量，这是它与普通函数的主要区别之一。</p>
+        
+        <h3>1. 值捕获（默认不修改原变量）</h3>
+        <div class="code-block">
+<span class="type">int</span> count <span class="operator">=</span> <span class="number">0</span><span class="operator">;</span><br>
+<br>
+<span class="comment">// 值捕获 - 创建副本</span><br>
+<span class="keyword">auto</span> increment_copy <span class="operator">=</span> <span class="operator">[</span>count<span class="operator">]</span><span class="operator">(</span><span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// count++;  // 错误！不能修改捕获的副本</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> count <span class="operator">+</span> <span class="number">1</span><span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> increment_copy<span class="operator">(</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 1</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> count <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 0 (原值未变)</span>
+        </div>
+        
+        <h3>2. 使用mutable修改副本</h3>
+        <div class="code-block">
+<span class="type">int</span> count <span class="operator">=</span> <span class="number">0</span><span class="operator">;</span><br>
+<br>
+<span class="comment">// mutable允许修改副本（但不影响原变量）</span><br>
+<span class="keyword">auto</span> increment_mutable <span class="operator">=</span> <span class="operator">[</span>count<span class="operator">]</span><span class="operator">(</span><span class="operator">)</span> <span class="keyword">mutable</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;count<span class="operator">++</span><span class="operator">;</span> <span class="comment">// 修改的是副本</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> count<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> increment_mutable<span class="operator">(</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 1</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> increment_mutable<span class="operator">(</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 2</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> count <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 0 (原值未变)</span>
+        </div>
+        
+        <h3>3. 引用捕获（可以修改原变量）</h3>
+        <div class="code-block">
+<span class="type">int</span> count <span class="operator">=</span> <span class="number">0</span><span class="operator">;</span><br>
+<br>
+<span class="comment">// 引用捕获 - 可以修改原变量</span><br>
+<span class="keyword">auto</span> increment_ref <span class="operator">=</span> <span class="operator">[</span><span class="operator">&amp;</span>count<span class="operator">]</span><span class="operator">(</span><span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;count<span class="operator">++</span><span class="operator">;</span> <span class="comment">// 修改原变量</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> count<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> increment_ref<span class="operator">(</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 1</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> count <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 1 (原值被修改)</span>
+        </div>
+        
+        <h2>泛型Lambda (C++14)</h2>
+        <p>C++14引入了泛型Lambda，允许参数类型自动推断。</p>
+        
+        <div class="code-block">
+<span class="comment">// 泛型Lambda - 可以处理多种类型</span><br>
+<span class="keyword">auto</span> add <span class="operator">=</span> <span class="operator">[</span><span class="operator">]</span><span class="operator">(</span><span class="keyword">auto</span> x<span class="operator">,</span> <span class="keyword">auto</span> y<span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> x <span class="operator">+</span> y<span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+<span class="comment">// 可以用于各种类型</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> add<span class="operator">(</span><span class="number">5</span><span class="operator">,</span> <span class="number">3</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 8 (int + int)</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> add<span class="operator">(</span><span class="number">2.5</span><span class="operator">,</span> <span class="number">3.7</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 6.2 (double + double)</span><br>
+<br>
+std<span class="operator">::</span>string a <span class="operator">=</span> <span class="string">"Hello "</span><span class="operator">;</span><br>
+std<span class="operator">::</span>string b <span class="operator">=</span> <span class="string">"World"</span><span class="operator">;</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> add<span class="operator">(</span>a<span class="operator">,</span> b<span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: Hello World (string + string)</span>
+        </div>
+        
+        <h2>Lambda作为返回值</h2>
+        <p>Lambda可以方便地从函数返回，创建闭包。</p>
+        
+        <div class="code-block">
+<span class="comment">// 函数返回Lambda</span><br>
+<span class="keyword">auto</span> create_multiplier <span class="operator">=</span> <span class="operator">[</span><span class="operator">]</span><span class="operator">(</span><span class="keyword">auto</span> factor<span class="operator">)</span> <span class="operator">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="operator">[</span>factor<span class="operator">]</span><span class="operator">(</span><span class="keyword">auto</span> x<span class="operator">)</span> <span class="operator">{</span> <span class="keyword">return</span> x <span class="operator">*</span> factor<span class="operator">;</span> <span class="operator">}</span><span class="operator">;</span><br>
+<span class="operator">}</span><span class="operator">;</span><br>
+<br>
+<span class="keyword">auto</span> double_it <span class="operator">=</span> create_multiplier<span class="operator">(</span><span class="number">2</span><span class="operator">)</span><span class="operator">;</span><br>
+<span class="keyword">auto</span> triple_it <span class="operator">=</span> create_multiplier<span class="operator">(</span><span class="number">3</span><span class="operator">)</span><span class="operator">;</span><br>
+<br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> double_it<span class="operator">(</span><span class="number">5</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 10</span><br>
+std<span class="operator">::</span>cout <span class="operator">&lt;&lt;</span> triple_it<span class="operator">(</span><span class="number">5</span><span class="operator">)</span> <span class="operator">&lt;&lt;</span> std<span class="operator">::</span>endl<span class="operator">;</span> <span class="comment">// 输出: 15</span>
+        </div>
+        
+        <h2>捕获方式总结</h2>
+        <div class="code-block">
+<span class="operator">[</span><span class="operator">]</span> <span class="comment">// 不捕获任何变量</span><br>
+<span class="operator">[</span><span class="operator">=</span><span class="operator">]</span> <span class="comment">// 所有变量值捕获</span><br>
+<span class="operator">[</span><span class="operator">&amp;</span><span class="operator">]</span> <span class="comment">// 所有变量引用捕获</span><br>
+<span class="operator">[</span>x<span class="operator">]</span> <span class="comment">// 仅x值捕获</span><br>
+<span class="operator">[</span><span class="operator">&amp;</span>x<span class="operator">]</span> <span class="comment">// 仅x引用捕获</span><br>
+<span class="operator">[</span><span class="operator">=</span><span class="operator">,</span> <span class="operator">&amp;</span>x<span class="operator">]</span> <span class="comment">// 除x引用捕获外，其他值捕获</span><br>
+<span class="operator">[</span><span class="operator">&amp;</span><span class="operator">,</span> x<span class="operator">]</span> <span class="comment">// 除x值捕获外，其他引用捕获</span>
+        </div>
+        
+        <h2>关键知识点回顾</h2>
+        <ul>
+            <li><span class="highlight">Lambda是匿名函数</span> - 由`[](){}`组成，可以没有名字</li>
+            <li><span class="highlight">可以捕获外部变量</span> - 这是与普通函数的主要区别</li>
+            <li><span class="highlight">默认值捕获不修改原变量</span> - 创建的是副本</li>
+            <li><span class="highlight">使用mutable可修改值捕获的副本</span> - 但不影响原变量</li>
+            <li><span class="highlight">引用捕获可修改原变量</span> - 使用`&`符号</li>
+            <li><span class="highlight">C++14支持泛型Lambda</span> - 使用`auto`参数</li>
+            <li><span class="highlight">Lambda类型是唯一的闭包类型</span> - 每个Lambda都有独特的类型</li>
+        </ul>
+        
+        <div class="warning-box">
+            <strong>注意：</strong> 引用捕获要特别小心生命周期问题。如果Lambda的生命周期超过了它捕获的引用变量，会导致悬空引用。
+        </div>
+        
+        <h2>实际应用场景</h2>
+        <ol>
+            <li><strong>一次性使用逻辑</strong> - 不需要专门定义函数</li>
+            <li><strong>回调函数</strong> - 事件处理、异步操作</li>
+            <li><strong>算法定制</strong> - STL算法的自定义比较器、过滤器</li>
+            <li><strong>快速测试</strong> - 快速验证想法</li>
+            <li><strong>函数式编程</strong> - 创建高阶函数、闭包</li>
+        </ol>
+        
+        <p><strong>总结：</strong>Lambda表达式是现代C++中非常重要的特性，它让代码更简洁、更安全、更易于维护，在多种场景下都能发挥作用！</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ 关联容器完全指南：map, set, unordered_map, unordered_set</title>
+    <style>
+        /* 全局样式 */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            line-height: 1.65;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-size: 16px;
+        }
+        h1, h2, h3, h4, h5 {
+            font-weight: 700;
+            margin-top: 1.8em;
+            margin-bottom: 0.75em;
+            letter-spacing: -0.01em;
+        }
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 3px solid #209fff;
+            padding-bottom: 0.3em;
+            color: #0f172a;
+        }
+        h2 {
+            font-size: 1.8rem;
+            border-left: 6px solid #ee4c2e;
+            padding-left: 20px;
+            margin-top: 2rem;
+            background: linear-gradient(to right, #fff, #f1f5f9);
+        }
+        h3 {
+            font-size: 1.5rem;
+            color: #0f3b5c;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 0.3em;
+        }
+        h4 {
+            font-size: 1.25rem;
+            color: #209fff;
+            margin-bottom: 0.5em;
+        }
+        /* 为不同容器设置独特标识色 */
+        .map-theme h2 { border-left-color: #3b82f6; background: #eff6ff; }
+        .set-theme h2 { border-left-color: #10b981; background: #ecfdf5; }
+        .unordered_map-theme h2 { border-left-color: #f59e0b; background: #fffbeb; }
+        .unordered_set-theme h2 { border-left-color: #8b5cf6; background: #f5f3ff; }
+        
+        /* 代码样式 */
+        code {
+            background-color: #eef2ff;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.9em;
+            color: #c2410c;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 1.2em 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+        /* 表格美化 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1.2em 0;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        tr:hover td {
+            background-color: #fef9e3;
+        }
+        /* 列表与提示 */
+        ul, ol {
+            margin: 0.6em 0 1em 1.8em;
+        }
+        li {
+            margin: 0.4em 0;
+        }
+        .warning {
+            background-color: #fff1f0;
+            border-left: 5px solid #ee4c2e;
+            padding: 12px 18px;
+            margin: 1.2em 0;
+            border-radius: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+        }
+        /* 函数列表样式 */
+        .func-list {
+            margin: 1.5em 0;
+        }
+        .func-item {
+            margin-bottom: 1.2em;
+            border-left: 4px solid #209fff;
+            padding-left: 1.2em;
+            background-color: #ffffff;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.2s;
+        }
+        .func-item:hover {
+            background-color: #f8fafc;
+            border-left-width: 6px;
+        }
+        .func-name {
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 1.05rem;
+            color: #0f3b5c;
+            margin-bottom: 0.3rem;
+            display: inline-block;
+            background: #eef2ff;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+        }
+        .param-list {
+            list-style-type: none;
+            padding-left: 1.2rem;
+            margin: 0.5rem 0;
+        }
+        .param-list li {
+            margin: 0.25rem 0;
+            font-size: 0.92rem;
+        }
+        /* 对比卡片 */
+        .container-compare {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        .compare-card {
+            flex: 1;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.1s ease;
+        }
+        .compare-card h4 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .compare-card:nth-child(1) { border-top: 5px solid #3b82f6; }
+        .compare-card:nth-child(2) { border-top: 5px solid #f59e0b; }
+        /* 颜色辅助类 */
+        .color-blue { color: #209fff; font-weight: 500; }
+        .color-orange { color: #ee4c2e; font-weight: 600; }
+        .color-purple { color: #9221ff; }
+        .color-green { color: #32833a; }
+        .badge {
+            background: #209fff10;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+        hr {
+            margin: 2rem 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, #cbd5e1, transparent);
+        }
+        /* 响应式 */
+        @media (max-width: 768px) {
+            body { padding: 16px; font-size: 15px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.3rem; }
+            .func-name { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>📚 C++ 关联容器完全指南</h1>
+<p style="font-size:1.1rem; color:#334155;">本文详细介绍 C++ 标准库中的四种核心关联容器：
+<span class="color-blue"><code>std::map</code></span>、<span class="color-blue"><code>std::set</code></span>、<span class="color-blue"><code>std::unordered_map</code></span>、<span class="color-blue"><code>std::unordered_set</code></span>。
+涵盖构造、插入、查找、删除、性能特性及完整函数列表。</p>
+
+<div class="container-compare">
+    <div class="compare-card">
+        <h4>🔷 有序关联容器</h4>
+        <p><span class="color-blue"><code>map</code></span>：键值对，键唯一，按<strong>键排序</strong>（红黑树）<br>
+        <span class="color-blue"><code>set</code></span>：键集合，元素唯一，按<strong>值排序</strong></p>
+    </div>
+    <div class="compare-card">
+        <h4>⚡ 无序关联容器</h4>
+        <p><span class="color-blue"><code>unordered_map</code></span>：键值对，键唯一，基于<strong>哈希表</strong><br>
+        <span class="color-blue"><code>unordered_set</code></span>：键集合，元素唯一，基于<strong>哈希表</strong></p>
+    </div>
+</div>
+
+<hr>
+
+<!-- ==================== std::map ==================== -->
+<div class="map-theme">
+<h2>1. std::map <span class="badge">有序 · 键值对</span></h2>
+<p><span class="color-blue"><code>std::map</code></span> 是基于<strong>红黑树</strong>的有序关联容器，存储 <strong>键-值对</strong>，键唯一并按升序排列。</p>
+
+<h3>头文件与命名空间</h3>
+<pre><code class="cpp">#include &lt;map&gt;</code></pre>
+
+<h3>模板参数</h3>
+<pre><code class="cpp">template&lt;
+    class Key,
+    class T,
+    class Compare = std::less&lt;Key&gt;,
+    class Allocator = std::allocator&lt;std::pair&lt;const Key, T&gt;&gt;
+&gt; class map;</code></pre>
+
+<h3>构造与初始化</h3>
+<table>
+    <thead><tr><th>方式</th><th>示例</th></tr></thead>
+    <tbody>
+        <tr><td>默认构造</td><td><code>std::map&lt;int, std::string&gt; m;</code></td></tr>
+        <tr><td>初始化列表</td><td><code>std::map&lt;int, std::string&gt; m = {{1,"a"}, {2,"b"}};</code></td></tr>
+        <tr><td>范围构造</td><td><code>std::map&lt;int, std::string&gt; m(begin, end);</code></td></tr>
+        <tr><td>拷贝/移动构造</td><td><code>std::map&lt;int, std::string&gt; m2(m1);</code><br><code>std::map&lt;int, std::string&gt; m2(std::move(m1));</code></td></tr>
+    </tbody>
+</table>
+
+<h3>插入元素</h3>
+<ul>
+    <li><code>insert(pair)</code>：返回 <code>pair&lt;iterator,bool&gt;</code>，布尔表示是否成功。</li>
+    <li><code>emplace(args...)</code>：原地构造键值对。</li>
+    <li><code>emplace_hint(hint, args...)</code>：带提示插入。</li>
+    <li><code>operator[]</code>：若键存在返回引用，否则插入默认值。</li>
+    <li><code>try_emplace(key, args...)</code> (C++17)：键不存在才插入，更安全。</li>
+</ul>
+
+<h3>访问元素</h3>
+<ul>
+    <li><code>at(key)</code>：返回值的引用，键不存在抛 <code>std::out_of_range</code>。</li>
+    <li><code>operator[]</code>：可能插入默认值，不能用于 const 对象。</li>
+</ul>
+
+<h3>查找元素</h3>
+<ul>
+    <li><code>find(key)</code>：返回迭代器，未找到返回 <code>end()</code>。</li>
+    <li><code>count(key)</code>：返回 0 或 1。</li>
+    <li><code>contains(key)</code> (C++20)：返回 bool。</li>
+    <li><code>lower_bound(key)</code> / <code>upper_bound(key)</code>：边界查找。<br>
+        <span style="font-size:0.9rem; background:#f1f5f9; padding:2px 6px; border-radius:8px;">📘 lower_bound: 第一个 ≥ key</span> 
+        <span style="font-size:0.9rem; background:#f1f5f9; padding:2px 6px; border-radius:8px;">📘 upper_bound: 第一个 > key</span>
+    </li>
+    <li><code>equal_range(key)</code>：返回键等于 key 的范围。</li>
+</ul>
+
+<h3>删除元素</h3>
+<ul>
+    <li><code>erase(iterator)</code>、<code>erase(key)</code>、<code>erase(first,last)</code></li>
+    <li><code>clear()</code>：清空所有元素。</li>
+</ul>
+
+<h3>迭代器</h3>
+<p>支持正向、反向、常量迭代器：<code>begin()</code>, <code>end()</code>, <code>rbegin()</code>, <code>rend()</code>, <code>cbegin()</code>, <code>cend()</code> 等。</p>
+
+<h3>自定义比较</h3>
+<pre><code class="cpp">struct MyCompare {
+    bool operator()(const int& a, const int& b) const {
+        return a > b;   // 降序
+    }
+};
+std::map&lt;int, std::string, MyCompare&gt; m;</code></pre>
+
+<h3>性能复杂度</h3>
+<ul><li>插入/删除/查找：<span class="color-orange">O(log n)</span></li><li>遍历：O(n)</li></ul>
+
+<h3>C++11/17/20 新特性</h3>
+<ul><li>C++11：<code>emplace</code>, <code>cbegin/cend</code>, 移动语义</li><li>C++17：<code>try_emplace</code>, <code>insert_or_assign</code>, <code>extract</code></li><li>C++20：<code>contains</code></li></ul>
+
+<div class="warning">
+    <span class="color-orange">⚠️ map 易错点</span><br>
+    1. <code>operator[]</code> 会插入默认值，误用可能导致意外插入。<br>
+    2. 遍历时删除必须正确处理迭代器失效：<code>it = m.erase(it);</code><br>
+    3. 自定义比较必须满足严格弱序。<br>
+    4. 键是 const 的，不能通过迭代器修改键。
+</div>
+
+<h3>map 相关函数列表</h3>
+<div class="func-list">
+    <div class="func-item"><div class="func-name">map()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 默认构造空 map。</li></ul></div>
+    <div class="func-item"><div class="func-name">map(std::initializer_list&lt;value_type&gt; init)</div><ul class="param-list"><li><strong>参数：</strong> <code>init</code> - 初始化列表</li><li><strong>功能：</strong> 用初始化列表构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">map(const map&amp; other)</div><ul class="param-list"><li><strong>参数：</strong> <code>other</code> - 另一个 map</li><li><strong>功能：</strong> 拷贝构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">map(map&amp;&amp; other)</div><ul class="param-list"><li><strong>参数：</strong> <code>other</code> - 右值 map</li><li><strong>功能：</strong> 移动构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator begin()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回首元素迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator end()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回尾后迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool empty() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 判断是否为空。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type size() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">T&amp; operator[](const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 访问或插入默认值。</li></ul></div>
+    <div class="func-item"><div class="func-name">T&amp; at(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 带边界检查的访问。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,bool&gt; insert(const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>value</code> - 键值对</li><li><strong>功能：</strong> 插入元素，返回是否成功。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator insert(const_iterator hint, const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>hint</code> - 提示位置，<code>value</code> - 键值对</li><li><strong>功能：</strong> 带提示插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">template&lt;class... Args&gt; std::pair&lt;iterator,bool&gt; emplace(Args&amp;&amp;... args)</div><ul class="param-list"><li><strong>参数：</strong> <code>args</code> - 构造参数包</li><li><strong>功能：</strong> 原地构造并插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator erase(iterator pos)</div><ul class="param-list"><li><strong>参数：</strong> <code>pos</code> - 要删除的迭代器</li><li><strong>功能：</strong> 删除 pos 指向元素，返回下一迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type erase(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 要删除的键</li><li><strong>功能：</strong> 删除键对应的元素，返回删除个数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">void clear()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 清空所有元素。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator find(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 查找键，返回迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type count(const key_type&amp; key) const</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 返回键出现的次数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool contains(const key_type&amp; key) const (C++20)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 判断键是否存在。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator lower_bound(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 返回第一个不小于 key 的迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator upper_bound(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 返回第一个大于 key 的迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,iterator&gt; equal_range(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 返回键等于 key 的范围。</li></ul></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ==================== std::set ==================== -->
+<div class="set-theme">
+<h2>2. std::set <span class="badge">有序 · 键集合</span></h2>
+<p><span class="color-blue"><code>std::set</code></span> 是基于<strong>红黑树</strong>的有序关联容器，存储<strong>唯一键</strong>，元素按值自动排序。</p>
+
+<h3>头文件与命名空间</h3>
+<pre><code class="cpp">#include &lt;set&gt;</code></pre>
+
+<h3>模板参数</h3>
+<pre><code class="cpp">template&lt;
+    class Key,
+    class Compare = std::less&lt;Key&gt;,
+    class Allocator = std::allocator&lt;Key&gt;
+&gt; class set;</code></pre>
+
+<h3>构造与初始化</h3>
+<table>
+    <thead><tr><th>方式</th><th>示例</th></tr></thead>
+    <tbody>
+        <tr><td>默认构造</td><td><code>std::set&lt;int&gt; s;</code></td></tr>
+        <tr><td>初始化列表</td><td><code>std::set&lt;int&gt; s = {1,2,3};</code></td></tr>
+        <tr><td>范围构造</td><td><code>std::set&lt;int&gt; s(begin, end);</code></td></tr>
+    </tbody>
+</table>
+
+<h3>插入元素</h3>
+<ul>
+    <li><code>insert(value)</code>：返回 <code>pair&lt;iterator,bool&gt;</code>。</li>
+    <li><code>emplace(args...)</code>：原地构造。</li>
+    <li><code>emplace_hint(hint, args...)</code>：带提示插入。</li>
+</ul>
+
+<h3>查找元素</h3>
+<ul>
+    <li><code>find(key)</code>：返回迭代器。</li>
+    <li><code>count(key)</code>：返回 0 或 1。</li>
+    <li><code>contains(key)</code> (C++20)：返回 bool。</li>
+    <li><code>lower_bound(key)</code> / <code>upper_bound(key)</code></li>
+    <li><code>equal_range(key)</code></li>
+</ul>
+
+<h3>删除元素</h3>
+<ul>
+    <li><code>erase(iterator)</code>、<code>erase(key)</code>、<code>erase(first,last)</code></li>
+    <li><code>clear()</code></li>
+</ul>
+
+<h3>迭代器</h3>
+<p>同 map，支持正向、反向、常量迭代器。</p>
+
+<h3>自定义比较</h3>
+<pre><code class="cpp">struct MyCompare {
+    bool operator()(const int& a, const int& b) const {
+        return a > b;   // 降序
+    }
+};
+std::set&lt;int, MyCompare&gt; s;</code></pre>
+
+<h3>性能复杂度</h3>
+<ul><li>插入/删除/查找：<span class="color-orange">O(log n)</span></li></ul>
+
+<div class="warning">
+    <span class="color-orange">⚠️ set 易错点</span><br>
+    1. 元素是 const 的，不能通过迭代器修改。<br>
+    2. 插入已存在的元素会失败，可通过返回值判断。<br>
+    3. 自定义比较必须满足严格弱序。
+</div>
+
+<h3>set 相关函数列表</h3>
+<div class="func-list">
+    <div class="func-item"><div class="func-name">set()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 默认构造空 set。</li></ul></div>
+    <div class="func-item"><div class="func-name">set(std::initializer_list&lt;value_type&gt; init)</div><ul class="param-list"><li><strong>参数：</strong> <code>init</code> - 初始化列表</li><li><strong>功能：</strong> 用初始化列表构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator begin()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回首元素迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator end()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回尾后迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool empty() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 判断是否为空。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type size() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,bool&gt; insert(const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>value</code> - 要插入的值</li><li><strong>功能：</strong> 插入元素，返回是否成功。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator insert(const_iterator hint, const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>hint</code> - 提示位置，<code>value</code> - 值</li><li><strong>功能：</strong> 带提示插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">template&lt;class... Args&gt; std::pair&lt;iterator,bool&gt; emplace(Args&amp;&amp;... args)</div><ul class="param-list"><li><strong>参数：</strong> <code>args</code> - 构造参数包</li><li><strong>功能：</strong> 原地构造并插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator erase(iterator pos)</div><ul class="param-list"><li><strong>参数：</strong> <code>pos</code> - 要删除的迭代器</li><li><strong>功能：</strong> 删除元素，返回下一迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type erase(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 要删除的值</li><li><strong>功能：</strong> 删除键，返回删除个数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">void clear()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 清空所有元素。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator find(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 查找值，返回迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type count(const key_type&amp; key) const</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 返回值出现的次数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool contains(const key_type&amp; key) const (C++20)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 判断值是否存在。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator lower_bound(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 返回第一个不小于 key 的迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator upper_bound(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 返回第一个大于 key 的迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,iterator&gt; equal_range(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 返回值等于 key 的范围。</li></ul></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ==================== std::unordered_map ==================== -->
+<div class="unordered_map-theme">
+<h2>3. std::unordered_map <span class="badge">无序 · 键值对</span></h2>
+<p><span class="color-blue"><code>std::unordered_map</code></span> 是基于<strong>哈希表</strong>的无序关联容器，存储 <strong>键-值对</strong>，键唯一，平均 O(1) 访问。</p>
+
+<h3>头文件与命名空间</h3>
+<pre><code class="cpp">#include &lt;unordered_map&gt;</code></pre>
+
+<h3>模板参数</h3>
+<pre><code class="cpp">template&lt;
+    class Key,
+    class T,
+    class Hash = std::hash&lt;Key&gt;,
+    class KeyEqual = std::equal_to&lt;Key&gt;,
+    class Allocator = std::allocator&lt;std::pair&lt;const Key, T&gt;&gt;
+&gt; class unordered_map;</code></pre>
+
+<h3>插入元素</h3>
+<ul>
+    <li><code>insert(pair)</code>：返回 <code>pair&lt;iterator,bool&gt;</code>。</li>
+    <li><code>emplace(args...)</code>、<code>emplace_hint</code></li>
+    <li><code>operator[]</code>：若键存在返回引用，否则插入默认值。</li>
+    <li><code>try_emplace(key, args...)</code> (C++17)</li>
+    <li><code>insert_or_assign(key, value)</code> (C++17)</li>
+</ul>
+
+<h3>访问元素</h3>
+<ul><li><code>at(key)</code>：抛异常版</li><li><code>operator[]</code>：可能插入默认值</li></ul>
+
+<h3>查找元素</h3>
+<ul>
+    <li><code>find(key)</code>：返回迭代器</li>
+    <li><code>count(key)</code>：返回 0 或 1</li>
+    <li><code>contains(key)</code> (C++20)</li>
+    <li><code>equal_range(key)</code></li>
+</ul>
+<p>注意：<span class="color-orange">无序容器没有 <code>lower_bound/upper_bound</code>，因为元素无序。</span></p>
+
+<h3>桶接口（哈希表特有）</h3>
+<ul>
+    <li><code>bucket_count()</code>：桶的数量</li>
+    <li><code>max_bucket_count()</code></li>
+    <li><code>bucket_size(size_type n)</code>：第 n 个桶的元素个数</li>
+    <li><code>bucket(key)</code>：键所在的桶索引</li>
+    <li><code>load_factor()</code>：当前负载因子</li>
+    <li><code>max_load_factor()</code>：最大负载因子（可设置）</li>
+    <li><code>rehash(n)</code>：预留至少 n 个桶</li>
+    <li><code>reserve(n)</code>：预留至少 n 个元素的空间</li>
+</ul>
+
+<h3>自定义哈希与相等比较</h3>
+<pre><code class="cpp">struct MyHash {
+    size_t operator()(const int& x) const {
+        return std::hash&lt;int&gt;()(x) ^ (x >> 1);
+    }
+};
+struct MyEqual {
+    bool operator()(const int& a, const int& b) const {
+        return a == b;
+    }
+};
+std::unordered_map&lt;int, std::string, MyHash, MyEqual&gt; m;</code></pre>
+
+<h3>性能复杂度</h3>
+<ul><li>平均插入/删除/查找：<span class="color-orange">O(1)</span>，最坏 O(n)（哈希冲突严重）</li><li>遍历：O(n)</li></ul>
+
+<div class="warning">
+    <span class="color-orange">⚠️ unordered_map 易错点</span><br>
+    1. 哈希函数质量差会导致严重性能下降，甚至退化为 O(n)。<br>
+    2. <code>operator[]</code> 会插入默认值，与 map 相同。<br>
+    3. 迭代器在 rehash 后会失效，但插入元素不一定会 rehash。<br>
+    4. 键类型必须支持哈希和相等比较。
+</div>
+
+<h3>unordered_map 相关函数列表</h3>
+<div class="func-list">
+    <div class="func-item"><div class="func-name">unordered_map()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 默认构造空 unordered_map。</li></ul></div>
+    <div class="func-item"><div class="func-name">unordered_map(std::initializer_list&lt;value_type&gt; init)</div><ul class="param-list"><li><strong>参数：</strong> <code>init</code> - 初始化列表</li><li><strong>功能：</strong> 用初始化列表构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator begin()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回首元素迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator end()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回尾后迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool empty() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 判断是否为空。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type size() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">T&amp; operator[](const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 访问或插入默认值。</li></ul></div>
+    <div class="func-item"><div class="func-name">T&amp; at(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 带边界检查的访问。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,bool&gt; insert(const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>value</code> - 键值对</li><li><strong>功能：</strong> 插入元素，返回是否成功。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator insert(const_iterator hint, const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>hint</code> - 提示位置（仅作为优化提示）</li><li><strong>功能：</strong> 带提示插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">template&lt;class... Args&gt; std::pair&lt;iterator,bool&gt; emplace(Args&amp;&amp;... args)</div><ul class="param-list"><li><strong>参数：</strong> <code>args</code> - 构造参数包</li><li><strong>功能：</strong> 原地构造并插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator erase(iterator pos)</div><ul class="param-list"><li><strong>参数：</strong> <code>pos</code> - 要删除的迭代器</li><li><strong>功能：</strong> 删除元素，返回下一迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type erase(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 要删除的键</li><li><strong>功能：</strong> 删除键对应的元素，返回删除个数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">void clear()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 清空所有元素。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator find(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 查找键，返回迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type count(const key_type&amp; key) const</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 返回键出现的次数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool contains(const key_type&amp; key) const (C++20)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 键</li><li><strong>功能：</strong> 判断键是否存在。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type bucket_count() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回桶的数量。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type bucket_size(size_type n) const</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 桶索引</li><li><strong>功能：</strong> 返回第 n 个桶的元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">float load_factor() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回当前负载因子（元素数/桶数）。</li></ul></div>
+    <div class="func-item"><div class="func-name">void rehash(size_type n)</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 新桶数下限</li><li><strong>功能：</strong> 重新哈希，使桶数至少为 n。</li></ul></div>
+    <div class="func-item"><div class="func-name">void reserve(size_type n)</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 预留元素数</li><li><strong>功能：</strong> 预先分配空间，使负载因子不超过 max_load_factor。</li></ul></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ==================== std::unordered_set ==================== -->
+<div class="unordered_set-theme">
+<h2>4. std::unordered_set <span class="badge">无序 · 键集合</span></h2>
+<p><span class="color-blue"><code>std::unordered_set</code></span> 是基于<strong>哈希表</strong>的无序关联容器，存储<strong>唯一键</strong>，平均 O(1) 访问。</p>
+
+<h3>头文件与命名空间</h3>
+<pre><code class="cpp">#include &lt;unordered_set&gt;</code></pre>
+
+<h3>模板参数</h3>
+<pre><code class="cpp">template&lt;
+    class Key,
+    class Hash = std::hash&lt;Key&gt;,
+    class KeyEqual = std::equal_to&lt;Key&gt;,
+    class Allocator = std::allocator&lt;Key&gt;
+&gt; class unordered_set;</code></pre>
+
+<h3>插入元素</h3>
+<ul><li><code>insert(value)</code>、<code>emplace</code>、<code>emplace_hint</code></li></ul>
+
+<h3>查找元素</h3>
+<ul>
+    <li><code>find(key)</code></li>
+    <li><code>count(key)</code></li>
+    <li><code>contains(key)</code> (C++20)</li>
+    <li><code>equal_range(key)</code></li>
+</ul>
+
+<h3>桶接口</h3>
+<p>与 unordered_map 相同：<code>bucket_count</code>, <code>bucket_size</code>, <code>load_factor</code>, <code>rehash</code>, <code>reserve</code> 等。</p>
+
+<h3>自定义哈希与相等比较</h3>
+<p>与 unordered_map 类似，需提供哈希函数和相等比较器。</p>
+
+<h3>性能复杂度</h3>
+<ul><li>平均插入/删除/查找：<span class="color-orange">O(1)</span>，最坏 O(n)</li></ul>
+
+<div class="warning">
+    <span class="color-orange">⚠️ unordered_set 易错点</span><br>
+    1. 元素不可修改（const），修改必须删除再插入。<br>
+    2. 哈希冲突会导致性能下降，必要时使用 <code>reserve</code> 预分配。<br>
+    3. 自定义类型需要提供哈希函数和相等比较。
+</div>
+
+<h3>unordered_set 相关函数列表</h3>
+<div class="func-list">
+    <div class="func-item"><div class="func-name">unordered_set()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 默认构造空 unordered_set。</li></ul></div>
+    <div class="func-item"><div class="func-name">unordered_set(std::initializer_list&lt;value_type&gt; init)</div><ul class="param-list"><li><strong>参数：</strong> <code>init</code> - 初始化列表</li><li><strong>功能：</strong> 用初始化列表构造。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator begin()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回首元素迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator end()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回尾后迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool empty() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 判断是否为空。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type size() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">std::pair&lt;iterator,bool&gt; insert(const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>value</code> - 要插入的值</li><li><strong>功能：</strong> 插入元素，返回是否成功。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator insert(const_iterator hint, const value_type&amp; value)</div><ul class="param-list"><li><strong>参数：</strong> <code>hint</code> - 提示位置，<code>value</code> - 值</li><li><strong>功能：</strong> 带提示插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">template&lt;class... Args&gt; std::pair&lt;iterator,bool&gt; emplace(Args&amp;&amp;... args)</div><ul class="param-list"><li><strong>参数：</strong> <code>args</code> - 构造参数包</li><li><strong>功能：</strong> 原地构造并插入。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator erase(iterator pos)</div><ul class="param-list"><li><strong>参数：</strong> <code>pos</code> - 要删除的迭代器</li><li><strong>功能：</strong> 删除元素，返回下一迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type erase(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 要删除的值</li><li><strong>功能：</strong> 删除值，返回删除个数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">void clear()</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 清空所有元素。</li></ul></div>
+    <div class="func-item"><div class="func-name">iterator find(const key_type&amp; key)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 查找值，返回迭代器。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type count(const key_type&amp; key) const</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 返回值出现的次数（0/1）。</li></ul></div>
+    <div class="func-item"><div class="func-name">bool contains(const key_type&amp; key) const (C++20)</div><ul class="param-list"><li><strong>参数：</strong> <code>key</code> - 值</li><li><strong>功能：</strong> 判断值是否存在。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type bucket_count() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回桶的数量。</li></ul></div>
+    <div class="func-item"><div class="func-name">size_type bucket_size(size_type n) const</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 桶索引</li><li><strong>功能：</strong> 返回第 n 个桶的元素个数。</li></ul></div>
+    <div class="func-item"><div class="func-name">float load_factor() const</div><ul class="param-list"><li><strong>参数：</strong> 无</li><li><strong>功能：</strong> 返回当前负载因子。</li></ul></div>
+    <div class="func-item"><div class="func-name">void rehash(size_type n)</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 新桶数下限</li><li><strong>功能：</strong> 重新哈希，使桶数至少为 n。</li></ul></div>
+    <div class="func-item"><div class="func-name">void reserve(size_type n)</div><ul class="param-list"><li><strong>参数：</strong> <code>n</code> - 预留元素数</li><li><strong>功能：</strong> 预先分配空间。</li></ul></div>
+</div>
+</div>
+
+<hr>
+
+<h2>📌 总结与选择建议</h2>
+<table>
+    <thead><tr><th>需求</th><th>推荐容器</th><th>理由</th></tr></thead>
+    <tbody>
+        <tr><td>需要有序遍历</td><td><code>map</code> / <code>set</code></td><td>基于红黑树，按序存储</td></tr>
+        <tr><td>追求最快查找速度</td><td><code>unordered_map</code> / <code>unordered_set</code></td><td>哈希表平均 O(1)</td></tr>
+        <tr><td>存储键值对</td><td><code>map</code> / <code>unordered_map</code></td><td>支持值关联</td></tr>
+        <tr><td>仅存储键</td><td><code>set</code> / <code>unordered_set</code></td><td>轻量，避免冗余</td></tr>
+        <tr><td>自定义哈希与比较</td><td>无序容器需提供哈希函数，有序容器需提供比较函数</td><td>灵活适配自定义类型</td></tr>
+    </tbody>
+</table>
+
+<p style="margin-top: 2rem; padding: 1rem; background: #eef2ff; border-radius: 1rem; text-align: center;">✅ 掌握四种容器的特性，能够根据场景选择最合适的数据结构，写出高效且可维护的 C++ 代码。</p>
+</body>
+</html>

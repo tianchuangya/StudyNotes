@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高精度运算全解析 (+-*/%)/tianchuangya</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #252525;
+            border-bottom: 3px solid #007acc;
+            padding-bottom: 12px;
+            margin-bottom: 40px;
+            font-size: 30px;
+            text-align: center;
+        }
+        h2 {
+            color: #007acc;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            border-left: 5px solid #007acc;
+            padding-left: 18px;
+            font-size: 24px;
+        }
+        h3 {
+            color: #e67e22;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: #e74c3c;
+            text-underline-offset: 4px;
+        }
+        .highlight-blue {
+            color: #007acc;
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-style: solid;
+            text-decoration-color: #007acc;
+            text-underline-offset: 3px;
+        }
+        .highlight-green {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .code-block {
+        background-color: #f8f9fa;
+        padding: 25px;
+        border-radius: 6px;
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        overflow-x: auto;
+        position: relative;
+        font-size: 15px;
+        line-height: 1.8;
+        border: 1px solid #ddd;
+        margin: 20px 0;
+        color: #2d2d2d;
+    }
+
+    .code-keyword { color: #d73a49; font-weight: bold; }
+    .code-function { color: #6f42c1; font-weight: 500; }
+    .code-comment { color: #6a737d; font-style: italic; }
+    .code-string { color: #032f62; }
+    .code-variable { color: #e36209; }
+    .code-type { color: #24292e; font-weight: bold; }
+    .code-number { color: #005cc5; }
+    .code-operator { color: #d73a49; }
+    .code-punctuation { color: #24292e; }
+    .code-bracket { color: #005cc5; font-weight: bold; }
+    .code-namespace { color: #24292e; font-weight: bold; }
+    .code-directive { color: #6f42c1; font-weight: bold; }
+        .note, .warning, .tip {
+            padding: 18px 25px;
+            margin: 25px 0;
+            border-radius: 6px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+        .note {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+        .note strong:first-child { color: #1976d2; }
+        .warning {
+            background-color: #fff3e0;
+            border-left-color: #ff9800;
+        }
+        .warning strong:first-child { color: #f57c00; }
+        .tip {
+            background-color: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+        .tip strong:first-child { color: #388e3c; }
+        .summary {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 60px;
+            border: 1px solid #e0e0e0;
+        }
+        .summary h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+            color: #252525;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 10px;
+        }
+        .difference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        .difference-table th, .difference-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        .difference-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            color: #333;
+        }
+        .difference-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>高精度运算全解析（加法/减法/乘法/除法/取模）是天创呀制作</h1>
+        
+        <p>高精度运算用于处理超出标准数据类型（如 <code>int</code>、<code>long long</code>）范围的大整数计算。由于大整数无法直接存储在常规变量中，通常采用<strong class="highlight-blue">数组或向量（vector）</strong>存储每一位数字，且遵循<strong class="highlight">低位在前、高位在后</strong>的存储规则（便于从最低位开始逐位运算）。以下详细讲解高精度 +、-、*、/、% 五种运算的实现逻辑、注意事项及完整代码。</p>
+
+        <h2>一、高精度加法（A + B）</h2>
+        <p>核心逻辑：模拟手动加法，从最低位开始逐位相加，处理进位，最终合并结果。</p>
+
+        <h3>关键注意点</h3>
+        <ul>
+            <li><strong>存储规则</strong>：A、B 均按「低位在前、高位在后」存储（如数字 123 存储为 [3,2,1]）。</li>
+            <li><strong>进位处理</strong>：每一位相加结果 = A[i] + B[i] + 进位，当前位结果取模 10，新进位取整除 10。</li>
+            <li><strong>长度对齐</strong>：当 A、B 长度不同时，短的数字高位补 0 继续运算。</li>
+            <li><strong>结果收尾</strong>：运算结束后，若仍有进位（如 999 + 1 = 1000），需将进位添加到结果末尾。</li>
+            <li><strong>前导零</strong>：无需额外处理前导零（因低位在前，高位补 0 不影响结果）。</li>
+        </ul>
+
+        <h3>实现代码</h3>
+        <div class="code-block">
+            <pre><span class="code-type">std::vector&lt;int&gt;</span> <span class="code-function">add</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">res</span><span class="code-punctuation">;</span>
+    <span class="code-type">int</span> <span class="code-variable">carry</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">||</span> <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">||</span> <span class="code-variable">carry</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">++</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-type">int</span> <span class="code-variable">x</span> = <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">?</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">:</span> <span class="code-number">0</span><span class="code-punctuation">;</span>
+        <span class="code-type">int</span> <span class="code-variable">y</span> = <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">?</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">:</span> <span class="code-number">0</span><span class="code-punctuation">;</span>
+        <span class="code-type">int</span> <span class="code-variable">sum</span> = <span class="code-variable">x</span> <span class="code-operator">+</span> <span class="code-variable">y</span> <span class="code-operator">+</span> <span class="code-variable">carry</span><span class="code-punctuation">;</span>
+        <span class="code-variable">res</span>.<span class="code-function">push_back</span><span class="code-bracket">(</span><span class="code-variable">sum</span> <span class="code-operator">%</span> <span class="code-number">10</span><span class="code-bracket">)</span><span class="code-punctuation">;</span>
+        <span class="code-variable">carry</span> = <span class="code-variable">sum</span> <span class="code-operator">/</span> <span class="code-number">10</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+    <span class="code-keyword">return</span> <span class="code-variable">res</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span></pre>
+        </div>
+
+        <h2>二、高精度减法（A - B）</h2>
+        <p>核心逻辑：模拟手动减法，从最低位开始逐位相减，处理借位，最终合并结果（需保证 A ≥ B，若需支持负数需额外处理符号）。</p>
+
+        <h3>关键注意点</h3>
+        <ul>
+            <li><strong>前提条件</strong>：默认 A ≥ B（若需处理 A &lt; B，需先交换 A、B，结果前加负号）。</li>
+            <li><strong>借位处理</strong>：若当前位 A[i] &lt; B[i]，则向高位借 1（A[i] += 10），并标记借位（下一位运算时 A[i+1] -= 1）。</li>
+            <li><strong>长度对齐</strong>：短数字高位补 0，确保每一位都能对应相减。</li>
+            <li><strong>结果收尾</strong>：去除结果末尾的前导零（如 1000 - 999 = 1，存储为 [1,0,0,0]，需处理为 [1]）。</li>
+            <li><strong>特殊情况</strong>：若 A == B，结果为 [0]（避免返回空向量）。</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ 重要提醒</strong>：使用前需先判断 A 是否大于等于 B。可通过「比较函数」实现：若 A 长度大于 B 则 A 大；若长度相等，从高位到低位逐位比较，首个不同位数字大的则整体大。
+        </div>
+
+        <h3>实现代码（含比较函数）</h3>
+        <div class="code-block">
+            <pre><span class="code-comment">// 比较函数：判断 a 是否大于等于 b</span>
+<span class="code-type">bool</span> <span class="code-function">cmp</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">!=</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-bracket">)</span> <span class="code-keyword">return</span> <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">&gt;</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">-</span> <span class="code-number">1</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&gt;=</span> <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">--</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">!=</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span><span class="code-bracket">)</span> <span class="code-keyword">return</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">&gt;</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+    <span class="code-keyword">return</span> <span class="code-keyword">true</span><span class="code-punctuation">;</span> <span class="code-comment">// a == b</span>
+<span class="code-bracket">}</span>
+
+<span class="code-comment">// 减法函数：a - b（确保 a >= b）</span>
+<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-function">sub</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">res</span><span class="code-punctuation">;</span>
+    <span class="code-type">int</span> <span class="code-variable">borrow</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">++</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-type">int</span> <span class="code-variable">x</span> = <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">-</span> <span class="code-variable">borrow</span><span class="code-punctuation">;</span>
+        <span class="code-type">int</span> <span class="code-variable">y</span> = <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">?</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">:</span> <span class="code-number">0</span><span class="code-punctuation">;</span>
+        <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">x</span> <span class="code-operator">&lt;</span> <span class="code-variable">y</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+            <span class="code-variable">x</span> <span class="code-operator">+=</span> <span class="code-number">10</span><span class="code-punctuation">;</span>
+            <span class="code-variable">borrow</span> = <span class="code-number">1</span><span class="code-punctuation">;</span>
+        <span class="code-bracket">}</span> <span class="code-keyword">else</span> <span class="code-bracket">{</span>
+            <span class="code-variable">borrow</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+        <span class="code-bracket">}</span>
+        <span class="code-variable">res</span>.<span class="code-function">push_back</span><span class="code-bracket">(</span><span class="code-variable">x</span> <span class="code-operator">-</span> <span class="code-variable">y</span><span class="code-bracket">)</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+    <span class="code-comment">// 去除末尾前导零</span>
+    <span class="code-keyword">while</span> <span class="code-bracket">(</span><span class="code-variable">res</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">&gt;</span> <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">res</span>.<span class="code-function">back</span><span class="code-bracket">()</span> <span class="code-operator">==</span> <span class="code-number">0</span><span class="code-bracket">)</span> <span class="code-variable">res</span>.<span class="code-function">pop_back</span><span class="code-bracket">()</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">return</span> <span class="code-variable">res</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span></pre>
+        </div>
+
+        <h2>三、高精度乘法（A × B）</h2>
+        <p>核心逻辑：模拟手动乘法，用 A 的每一位分别与 B 的每一位相乘，结果按位累加，最后处理进位。</p>
+
+        <h3>关键注意点</h3>
+        <ul>
+            <li><strong>结果长度</strong>：两个长度分别为 n、m 的数字相乘，结果长度最多为 n + m（如 999 × 999 = 998001，长度 3 + 3 = 6）。</li>
+            <li><strong>位积位置</strong>：A[i] × B[j] 的结果应累加到结果的第 i + j 位（如 A 的个位（i=0）× B 的十位（j=1），结果在十位（i+j=1））。</li>
+            <li><strong>进位处理</strong>：先计算所有位积的累加结果，再统一处理进位（每一位结果 = 当前值 % 10，进位 = 当前值 / 10，传递到下一位）。</li>
+            <li><strong>前导零</strong>：结果末尾可能存在前导零（如 100 × 200 = 20000，存储为 [0,0,0,0,2]），需去除。</li>
+            <li><strong>特殊情况</strong>：若 A 或 B 为 0，直接返回 [0]（避免多余运算）。</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 优化技巧</strong>：初始化结果向量时，可直接分配 n + m 个元素（初始值为 0），避免动态扩容，提高效率。
+        </div>
+
+        <h3>实现代码</h3>
+        <div class="code-block">
+            <pre><span class="code-type">std::vector&lt;int&gt;</span> <span class="code-function">mul</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-comment">// 处理其中一个数为0的情况</span>
+    <span class="code-keyword">if</span> <span class="code-bracket">((</span><span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> == <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-number">0</span><span class="code-bracket">]</span> == <span class="code-number">0</span>) <span class="code-operator">||</span> (<span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span> == <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-number">0</span><span class="code-bracket">]</span> == <span class="code-number">0</span>)) <span class="code-bracket">{</span>
+        <span class="code-keyword">return</span> <span class="code-type">std::vector&lt;int&gt;</span><span class="code-bracket">{</span><span class="code-number">0</span><span class="code-bracket">}</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+
+    <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">res</span>(<span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">+</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span>, <span class="code-number">0</span>)<span class="code-punctuation">;</span>
+    <span class="code-comment">// 计算位积累加</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&lt;</span> <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">++</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">j</span> = <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">j</span> <span class="code-operator">&lt;</span> <span class="code-variable">b</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-punctuation">;</span> <span class="code-variable">j</span><span class="code-operator">++</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+            <span class="code-variable">res</span><span class="code-bracket">[</span><span class="code-variable">i</span> <span class="code-operator">+</span> <span class="code-variable">j</span><span class="code-bracket">]</span> <span class="code-operator">+=</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span> <span class="code-operator">*</span> <span class="code-variable">b</span><span class="code-bracket">[</span><span class="code-variable">j</span><span class="code-bracket">]</span><span class="code-punctuation">;</span>
+        <span class="code-bracket">}</span>
+    <span class="code-bracket">}</span>
+    <span class="code-comment">// 处理进位</span>
+    <span class="code-type">int</span> <span class="code-variable">carry</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">k</span> = <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">k</span> <span class="code-operator">&lt;</span> <span class="code-variable">res</span>.<span class="code-function">size</span><span class="code-bracket">()</span><span class="code-punctuation">;</span> <span class="code-variable">k</span><span class="code-operator">++</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-type">int</span> <span class="code-variable">total</span> = <span class="code-variable">res</span><span class="code-bracket">[</span><span class="code-variable">k</span><span class="code-bracket">]</span> <span class="code-operator">+</span> <span class="code-variable">carry</span><span class="code-punctuation">;</span>
+        <span class="code-variable">res</span><span class="code-bracket">[</span><span class="code-variable">k</span><span class="code-bracket">]</span> = <span class="code-variable">total</span> <span class="code-operator">%</span> <span class="code-number">10</span><span class="code-punctuation">;</span>
+        <span class="code-variable">carry</span> = <span class="code-variable">total</span> <span class="code-operator">/</span> <span class="code-number">10</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+    <span class="code-comment">// 去除末尾前导零</span>
+    <span class="code-keyword">while</span> <span class="code-bracket">(</span><span class="code-variable">res</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">&gt;</span> <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">res</span>.<span class="code-function">back</span><span class="code-bracket">()</span> <span class="code-operator">==</span> <span class="code-number">0</span><span class="code-bracket">)</span> <span class="code-variable">res</span>.<span class="code-function">pop_back</span><span class="code-bracket">()</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">return</span> <span class="code-variable">res</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span></pre>
+        </div>
+
+        <h2>四、高精度除法（A ÷ B）</h2>
+        <p>核心逻辑：模拟手动除法（商为高精度，除数为低精度，若需除数为高精度需额外实现），从高位到低位逐位计算商，处理余数。</p>
+
+        <h3>关键注意点</h3>
+        <ul>
+            <li><strong>除数限制</strong>：以下实现为「高精度 ÷ 低精度」（B 为 int 类型，范围 ≤ 1e9），若需「高精度 ÷ 高精度」，需先实现「高精度减法」和「比较函数」，通过减法模拟除法（效率较低）。</li>
+            <li><strong>运算方向</strong>：与加减乘不同，除法需从<strong>高位到低位</strong>运算（因高位决定商的高位）。</li>
+            <li><strong>余数处理</strong>：每一步计算后，余数 = 余数 × 10 + 当前位数字，商的当前位 = 余数 ÷ B，余数更新为 余数 % B。</li>
+            <li><strong>商的存储</strong>：商按「高位在前、低位在后」存储（便于逐位计算），最后需反转转为「低位在前」格式（与其他运算统一）。</li>
+            <li><strong>前导零</strong>：商的高位可能存在前导零（如 100 ÷ 2 = 50，计算时先得 0、5、0，需去除高位零）。</li>
+            <li><strong>特殊情况</strong>：B 不能为 0（需提前判断）；若 A &lt; B，商为 [0]，余数为 A。</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ 重要提醒</strong>：若需支持「高精度 ÷ 高精度」，可通过「试商法」实现：每次用被除数的前 k 位与除数比较，确定商的当前位，再用被除数减去「除数 × 商的当前位」，重复此过程直到被除数小于除数。
+        </div>
+
+        <h3>实现代码（高精度 ÷ 低精度，返回商和余数）</h3>
+        <div class="code-block">
+            <pre><span class="code-comment">// 返回 pair：first 为商（低位在前），second 为余数</span>
+<span class="code-type">std::pair&lt;std::vector&lt;int&gt;, int&gt;</span> <span class="code-function">div_low</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">int</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">quotient</span><span class="code-punctuation">;</span>
+    <span class="code-type">int</span> <span class="code-variable">remainder</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+    
+    <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">b</span> == <span class="code-number">0</span><span class="code-bracket">)</span> <span class="code-keyword">throw</span> <span class="code-string">"除数不能为 0"</span><span class="code-punctuation">;</span> <span class="code-comment">// 异常处理</span>
+    <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> == <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-number">0</span><span class="code-bracket">]</span> <span class="code-operator">&lt;</span> <span class="code-variable">b</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+         <span class="code-keyword">return</span> <span class="code-type">std::make_pair</span><span class="code-bracket">(</span><span class="code-type">std::vector&lt;int&gt;</span><span class="code-bracket">{</span><span class="code-number">0</span><span class="code-bracket">}</span>, <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-number">0</span><span class="code-bracket">]</span><span class="code-bracket">)</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+
+    <span class="code-comment">// 从高位到低位运算</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">-</span> <span class="code-number">1</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&gt;=</span> <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">--</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-variable">remainder</span> = <span class="code-variable">remainder</span> <span class="code-operator">*</span> <span class="code-number">10</span> <span class="code-operator">+</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span><span class="code-punctuation">;</span>
+        <span class="code-variable">quotient</span>.<span class="code-function">push_back</span><span class="code-bracket">(</span><span class="code-variable">remainder</span> <span class="code-operator">/</span> <span class="code-variable">b</span><span class="code-bracket">)</span><span class="code-punctuation">;</span>
+        <span class="code-variable">remainder</span> <span class="code-operator">%</span>= <span class="code-variable">b</span><span class="code-punctuation">;</span>
+    <span class="code-bracket">}</span>
+    
+    <span class="code-comment">// 反转商，转为低位在前格式</span>
+    <span class="code-function">std::reverse</span><span class="code-bracket">(</span><span class="code-variable">quotient</span>.<span class="code-function">begin</span><span class="code-bracket">()</span>, <span class="code-variable">quotient</span>.<span class="code-function">end</span><span class="code-bracket">()</span>)<span class="code-punctuation">;</span>
+    
+    <span class="code-comment">// 去除末尾前导零</span>
+    <span class="code-keyword">while</span> <span class="code-bracket">(</span><span class="code-variable">quotient</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">&gt;</span> <span class="code-number">1</span> <span class="code-operator">&amp;&amp;</span> <span class="code-variable">quotient</span>.<span class="code-function">back</span><span class="code-bracket">()</span> <span class="code-operator">==</span> <span class="code-number">0</span><span class="code-bracket">)</span> <span class="code-variable">quotient</span>.<span class="code-function">pop_back</span><span class="code-bracket">()</span><span class="code-punctuation">;</span>
+    
+    <span class="code-keyword">return</span> <span class="code-type">std::make_pair</span><span class="code-bracket">(</span><span class="code-variable">quotient</span>, <span class="code-variable">remainder</span><span class="code-bracket">)</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span></pre>
+        </div>
+
+        <h2>五、高精度取模（A % B）</h2>
+        <p>核心逻辑：取模运算的结果是除法运算的余数。因此，高精度取模可以直接利用高精度除法的逻辑来实现。</p>
+
+        <h3>关键注意点</h3>
+        <ul>
+            <li><strong>依赖除法</strong>：高精度取模的结果等于高精度除法运算后得到的余数。</li>
+            <li><strong>运算效率</strong>：如果只需要取模结果，不必完整计算出商，可以在除法过程中仅跟踪余数，这样效率更高。</li>
+            <li><strong>特殊情况</strong>：
+                <ul>
+                    <li>如果 B 为 0，运算无意义（需提前判断）。</li>
+                    <li>如果 A 为 0，结果为 0。</li>
+                    <li>如果 A &lt; B，结果为 A。</li>
+                    <li>结果的符号通常与被除数 A 一致（对于正数运算，结果恒为正）。</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>实现代码（高精度 % 低精度）</h3>
+        <div class="code-block">
+            <pre><span class="code-comment">// 高精度 a 对低精度 b 取模</span>
+<span class="code-type">int</span> <span class="code-function">mod_low</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">int</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-type">int</span> <span class="code-variable">remainder</span> = <span class="code-number">0</span><span class="code-punctuation">;</span>
+    
+    <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">b</span> == <span class="code-number">0</span><span class="code-bracket">)</span> <span class="code-keyword">throw</span> <span class="code-string">"模数不能为 0"</span><span class="code-punctuation">;</span>
+    <span class="code-keyword">if</span> <span class="code-bracket">(</span><span class="code-variable">b</span> == <span class="code-number">1</span><span class="code-bracket">)</span> <span class="code-keyword">return</span> <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-comment">// 任何数模1都为0</span>
+
+    <span class="code-comment">// 从高位到低位计算余数</span>
+    <span class="code-keyword">for</span> <span class="code-bracket">(</span><span class="code-type">int</span> <span class="code-variable">i</span> = <span class="code-variable">a</span>.<span class="code-function">size</span><span class="code-bracket">()</span> <span class="code-operator">-</span> <span class="code-number">1</span><span class="code-punctuation">;</span> <span class="code-variable">i</span> <span class="code-operator">&gt;=</span> <span class="code-number">0</span><span class="code-punctuation">;</span> <span class="code-variable">i</span><span class="code-operator">--</span><span class="code-bracket">)</span> <span class="code-bracket">{</span>
+        <span class="code-variable">remainder</span> = <span class="code-bracket">(</span><span class="code-variable">remainder</span> <span class="code-operator">*</span> <span class="code-number">10</span> <span class="code-operator">+</span> <span class="code-variable">a</span><span class="code-bracket">[</span><span class="code-variable">i</span><span class="code-bracket">]</span><span class="code-bracket">)</span> <span class="code-operator">%</span> <span class="code-variable">b</span><span class="code-punctuation">;</span>
+        <span class="code-comment">// 可以在这里加一个小优化，如果余数为0且不是最后一位，可以提前break吗？不行，因为高位可能还有数字。</span>
+        <span class="code-comment">// 例如 1000 % 8, 过程是 1%8=1, 10%8=2, 20%8=4, 40%8=0。必须算完。</span>
+    <span class="code-bracket">}</span>
+    
+    <span class="code-keyword">return</span> <span class="code-variable">remainder</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span>
+
+<span class="code-comment">// 如果已经有了除法函数，取模可以更简单</span>
+<span class="code-type">int</span> <span class="code-function">mod_using_div</span>(<span class="code-type">std::vector&lt;int&gt;</span> <span class="code-variable">a</span>, <span class="code-type">int</span> <span class="code-variable">b</span>) <span class="code-bracket">{</span>
+    <span class="code-keyword">return</span> <span class="code-function">div_low</span><span class="code-bracket">(</span><span class="code-variable">a</span>, <span class="code-variable">b</span><span class="code-bracket">)</span>.<span class="code-variable">second</span><span class="code-punctuation">;</span>
+<span class="code-bracket">}</span></pre>
+        </div>
+
+        <h2>六、五种高精度运算的异同点总结</h2>
+        
+        <table class="difference-table">
+            <thead>
+                <tr>
+                    <th>运算类型</th>
+                    <th>核心操作</th>
+                    <th>运算方向</th>
+                    <th>进位/借位处理</th>
+                    <th>结果长度特点</th>
+                    <th>特殊处理</th>
+                    <th>复杂度</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>加法 (+)</strong></td>
+                    <td>逐位相加</td>
+                    <td>低位 → 高位</td>
+                    <td>进位（carry）：sum % 10 为当前位，sum / 10 为新进位。</td>
+                    <td>≤ max(n,m) + 1</td>
+                    <td>无</td>
+                    <td>O(n)</td>
+                </tr>
+                <tr>
+                    <td><strong>减法 (-)</strong></td>
+                    <td>逐位相减</td>
+                    <td>低位 → 高位</td>
+                    <td>借位（borrow）：不够减时向上借位（+10）。</td>
+                    <td>≤ max(n,m)</td>
+                    <td>需比较大小确保 A ≥ B；结果需去前导零。</td>
+                    <td>O(n)</td>
+                </tr>
+                <tr>
+                    <td><strong>乘法 (*)</strong></td>
+                    <td>位积累加 + 统一进位</td>
+                    <td>低位 → 高位 (两层循环)</td>
+                    <td>先累加所有位积，再统一处理进位。</td>
+                    <td>≤ n + m</td>
+                    <td>结果需去前导零；处理任一数为0的情况。</td>
+                    <td>O(n*m)</td>
+                </tr>
+                <tr>
+                    <td><strong>除法 (/)</strong></td>
+                    <td>逐位求商 + 余数迭代</td>
+                    <td>高位 → 低位</td>
+                    <td>无进位/借位，有余数（remainder）迭代：remainder = remainder * 10 + 当前位。</td>
+                    <td>≤ max(n,m)</td>
+                    <td>需处理除数为0；商需反转并去前导零；返回商和余数。</td>
+                    <td>O(n) (低精度除数)</td>
+                </tr>
+                <tr>
+                    <td><strong>取模 (%)</strong></td>
+                    <td>迭代求余</td>
+                    <td>高位 → 低位</td>
+                    <td>无进位/借位，仅余数迭代：remainder = (remainder * 10 + 当前位) % mod。</td>
+                    <td>- (结果为单个整数)</td>
+                    <td>需处理模数为0；结果恒为非负（对正数）。</td>
+                    <td>O(n) (低精度模数)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>七、通用注意事项与编程建议</h2>
+        <div class="summary">
+            <h2>通用注意事项与编程建议</h2>
+            <ul>
+                <li><strong>数据存储</strong>：坚持使用「低位在前，高位在后」的存储方式，这是所有高精度运算统一的基础，能避免大量不必要的反转操作。</li>
+                <li><strong>输入输出</strong>：
+                    <ul>
+                        <li><strong>输入</strong>：从字符串读取大整数，然后将字符转换为数字，逆序存入向量。例如，"1234" → `[4, 3, 2, 1]`。</li>
+                        <li><strong>输出</strong>：将向量逆序遍历并打印每个元素。</li>
+                    </ul>
+                </li>
+                <li><strong>前导零</strong>：减法和乘法的结果经常需要去除前导零（即向量末尾的零），这是保证结果正确性和整洁性的重要步骤。</li>
+                <li><strong>边界情况</strong>：务必处理好如数字为0、除数/模数为0、结果为0等边界情况，这些是程序健壮性的关键。</li>
+                <li><strong>代码复用</strong>：
+                    <ul>
+                        <li>减法依赖于比较函数 <code>cmp</code>。</li>
+                        <li>高精度除法和取模都依赖于减法（对于高精度除数/模数）。</li>
+                        <li>取模可以直接复用除法的结果。</li>
+                    </ul>
+                    设计函数时应考虑模块化，便于复用。
+                </li>
+                <li><strong>性能考量</strong>：
+                    <ul>
+                        <li>乘法 O(n*m) 的复杂度最高，是性能瓶颈。对于超大规模数字，可研究快速傅里叶变换（FFT）等高级算法。</li>
+                        <li>除法的效率也较低，尤其是高精度除以高精度。</li>
+                    </ul>
+                </li>
+                <li><strong>异常处理</strong>：对于除法和取模运算，除数或模数为0是非法操作，应在代码中抛出异常或进行断言，防止程序崩溃。</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

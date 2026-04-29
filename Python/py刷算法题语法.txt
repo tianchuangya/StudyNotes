@@ -1,0 +1,18 @@
+# 快速读入（替代input()，适合多组数据）
+import sys
+input = sys.stdin.read().split()  # 一次性读入所有输入，按空格分割成列表
+ptr = 0
+x = float(input[ptr])
+ptr += 1
+  #2分割并转换成int数组
+nums = list(map(int, input().split()))
+
+# 快速输出（替代print()，减少IO次数）
+print("%.2f" % ans)  # 控制小数位数
+print(f"{num:.2}")#
+# 或批量输出
+print(' '.join(map(str, result)))  # 列表转字符串一次性输出
+
+#创建n*n的二维数组
+n = 3
+a = [[1 for _ in range(n)] for _ in range(n)]
