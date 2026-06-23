@@ -29,36 +29,48 @@ Python 中无原生“数组”类型，日常开发中用**列表（list）**�
 Python提供多种创建方式，适配不同使用场景：
 
 - **字面量直接创建（最常用）**：直接用方括号包裹元素，元素间用逗号分隔，适合已知固定元素的场景。
-`# 空列表
-empty_list = []
-# 普通列表
-num_list = [1, 2, 3, 4, 5]
-# 混合类型列表
-mix_list = [10, "python", 3.14, False]`
+  `# 空列表
+  empty_list = []
+  
+  # 普通列表
+  
+  num_list = [1, 2, 3, 4, 5]
+  
+  # 混合类型列表
+  
+  mix_list = [10, "python", 3.14, False]`
 
 - **列表推导式创建（动态生成）**：通过表达式+循环快速生成列表，简洁高效，适合动态初始化或数据转换场景。
+  
         `# 生成1-10的偶数列表
-even_list = [x for x in range(1, 11) if x % 2 == 0]
-print(even_list)  # [2, 4, 6, 8, 10]
+  
+  even_list = [x for x in range(1, 11) if x % 2 == 0]
+  print(even_list)  # [2, 4, 6, 8, 10]
 
 # 将字符串转换为字符列表
+
 str_list = [char for char in "hello"]
 print(str_list)  # ['h', 'e', 'l', 'l', 'o']`
 
 - **内置函数创建**：利用`list()`函数将可迭代对象（如元组、字符串、range）转换为列表。
+  
         `# 转换range对象
-range_list = list(range(5))  # [0, 1, 2, 3, 4]
-# 转换元组
-tuple_list = list((1, 2, 3))  # [1, 2, 3]
-# 转换字符串
-str2_list = list("python")  # ['p', 'y', 't', 'h', 'o', 'n']`
+  
+  range_list = list(range(5))  # [0, 1, 2, 3, 4]
+  
+  # 转换元组
+  
+  tuple_list = list((1, 2, 3))  # [1, 2, 3]
+  
+  # 转换字符串
+  
+  str2_list = list("python")  # ['p', 'y', 't', 'h', 'o', 'n']`
 
 ## 2. 访问一维列表元素
 
 通过「索引」访问，Python列表支持正向索引（从0开始）和反向索引（从-1开始，-1代表最后一个元素）。
 
 ```python
-
 fruit_list = ["apple", "banana", "orange", "grape"]
 # 正向索引：访问第2个元素（索引1）
 print(fruit_list[1])  # banana
@@ -79,7 +91,6 @@ print(fruit_list[::-1])  # ["grape", "orange", "banana", "apple"]
 ### （1）直接修改元素
 
 ```python
-
 num_list = [1, 2, 3, 4]
 num_list[2] = 99  # 修改索引2的元素
 print(num_list)  # [1, 2, 99, 4]
@@ -88,77 +99,100 @@ print(num_list)  # [1, 2, 99, 4]
 ### （2）添加元素
 
 - `append(x)`：在列表末尾添加单个元素x，无返回值。
+  
         `num_list = [1,2,3]
-num_list.append(4)
-print(num_list)  # [1,2,3,4]`
+  
+  num_list.append(4)
+  print(num_list)  # [1,2,3,4]`
 
 - `extend(iterable)`：在列表末尾添加可迭代对象的所有元素（如另一个列表），区别于append（append会将整个对象作为一个元素添加）。
+  
         `list1 = [1,2]
-list2 = [3,4]
-list1.extend(list2)
-print(list1)  # [1,2,3,4]
-list1.append(list2)
-print(list1)  # [1,2,3,4, [3,4]]`
+  
+  list2 = [3,4]
+  list1.extend(list2)
+  print(list1)  # [1,2,3,4]
+  list1.append(list2)
+  print(list1)  # [1,2,3,4, [3,4]]`
 
 - `insert(index, x)`：在指定索引位置插入元素x，原索引及后续元素后移。
+  
         `fruit_list = ["apple", "orange"]
-fruit_list.insert(1, "banana")  # 在索引1插入
-print(fruit_list)  # ["apple", "banana", "orange"]`
+  
+  fruit_list.insert(1, "banana")  # 在索引1插入
+  print(fruit_list)  # ["apple", "banana", "orange"]`
 
 ### （3）删除元素
 
 - `del 列表[索引]`：通过索引删除指定元素，无返回值。
+  
         `num_list = [1,2,3,4]
-del num_list[1]  # 删除索引1的元素
-print(num_list)  # [1,3,4]`
+  
+  del num_list[1]  # 删除索引1的元素
+  print(num_list)  # [1,3,4]`
 
 - `pop(index)`：删除指定索引的元素并返回该元素，默认删除最后一个元素。
+  
         `fruit_list = ["apple", "banana", "orange"]
-pop_fruit = fruit_list.pop(1)
-print(pop_fruit)  # banana
-print(fruit_list)  # ["apple", "orange"]`
+  
+  pop_fruit = fruit_list.pop(1)
+  print(pop_fruit)  # banana
+  print(fruit_list)  # ["apple", "orange"]`
 
 - `remove(x)`：删除第一个值为x的元素，无返回值；若x不存在则报错。
+  
         `num_list = [1,2,3,2]
-num_list.remove(2)  # 删除第一个2
-print(num_list)  # [1,3,2]`
+  
+  num_list.remove(2)  # 删除第一个2
+  print(num_list)  # [1,3,2]`
 
 - `clear()`：清空列表所有元素，返回空列表。
+  
         `num_list = [1,2,3]
-num_list.clear()
-print(num_list)  # []`
+  
+  num_list.clear()
+  print(num_list)  # []`
 
 ### （4）排序与反转
 
 - `sort(key=None, reverse=False)`：对列表原地排序（直接修改原列表），reverse=True表示降序。
+  
         `num_list = [3,1,4,2]
-num_list.sort()  # 升序
-print(num_list)  # [1,2,3,4]
-num_list.sort(reverse=True)  # 降序
-print(num_list)  # [4,3,2,1]`
+  
+  num_list.sort()  # 升序
+  print(num_list)  # [1,2,3,4]
+  num_list.sort(reverse=True)  # 降序
+  print(num_list)  # [4,3,2,1]`
 
 - `reverse()`：对列表原地反转（直接修改原列表）。
+  
         `num_list = [1,2,3,4]
-num_list.reverse()
-print(num_list)  # [4,3,2,1]`
+  
+  num_list.reverse()
+  print(num_list)  # [4,3,2,1]`
 
 ## 4. 一维列表的其他常用操作
 
 - `len(列表)`：获取列表长度（元素个数）。
+  
         `print(len([1,2,3]))  # 3`
 
 - `count(x)`：统计元素x在列表中出现的次数。
+  
         `print([1,2,2,3].count(2))  # 2`
 
 - `index(x)`：返回第一个值为x的元素的索引，若x不存在则报错。
+  
         `print(["a","b","c"].index("b"))  # 1`
 
 - `copy()`：创建列表的浅拷贝（区别于直接赋值，修改拷贝不会影响原列表）。
+  
         `list1 = [1,2,3]
-list2 = list1.copy()
-list2[0] = 99
-print(list1)  # [1,2,3]
-print(list2)  # [99,2,3]`
+  
+  list2 = list1.copy()
+  list2[0] = 99
+  print(list1)  # [1,2,3]
+  print(list2)  # [99,2,3]`
 
 # 三、二维列表：核心操作全解析
 
@@ -167,28 +201,35 @@ print(list2)  # [99,2,3]`
 ## 1. 创建二维列表
 
 - **字面量直接创建**：直接嵌套方括号，适合固定小数组。
+  
         `# 3行2列的二维列表
-two_d_list = [[1,2], [3,4], [5,6]]
-print(two_d_list)  # [[1,2], [3,4], [5,6]]`
+  
+  two_d_list = [[1,2], [3,4], [5,6]]
+  print(two_d_list)  # [[1,2], [3,4], [5,6]]`
 
 - **嵌套列表推导式创建（推荐）**：通过两层循环动态生成，避免“浅拷贝陷阱”，适合动态初始化m行n列的数组。
+  
         `m = 3  # 行数
-n = 4  # 列数
-# 创建3行4列、初始值为0的二维列表
-two_d_list = [[0 for _ in range(n)] for _ in range(m)]
-print(two_d_list)  # [[0,0,0,0], [0,0,0,0], [0,0,0,0]]`
+  
+  n = 4  # 列数
+  
+  # 创建3行4列、初始值为0的二维列表
+  
+  two_d_list = [[0 for _ in range(n)] for _ in range(m)]
+  print(two_d_list)  # [[0,0,0,0], [0,0,0,0], [0,0,0,0]]`
 
 - **❌ 错误方式：[[0]*n]*m（浅拷贝陷阱）**：外层列表的每个元素都是同一个内层列表的引用，修改任意一行会影响所有行。
+  
         `two_d_list = [[0]*4]*3
-two_d_list[0][1] = 99  # 仅想修改第0行第1列
-print(two_d_list)  # [[0,99,0,0], [0,99,0,0], [0,99,0,0]]（所有行都被修改）`
+  
+  two_d_list[0][1] = 99  # 仅想修改第0行第1列
+  print(two_d_list)  # [[0,99,0,0], [0,99,0,0], [0,99,0,0]]（所有行都被修改）`
 
 ## 2. 访问二维列表元素
 
 语法：`二维列表[行索引][列索引]`，行索引和列索引均支持正向/反向索引。
 
 ```python
-
 two_d_list = [[1,2,3], [4,5,6], [7,8,9]]
 # 访问第1行第2列的元素（行索引1，列索引2）
 print(two_d_list[1][2])  # 6
@@ -206,7 +247,6 @@ print(col1)  # [2,5,8]
 ### （1）单个元素修改
 
 ```python
-
 two_d_list = [[1,2,3], [4,5,6], [7,8,9]]
 two_d_list[2][1] = 99  # 修改第2行第1列的元素
 print(two_d_list)  # [[1,2,3], [4,5,6], [7,99,9]]
@@ -217,7 +257,6 @@ print(two_d_list)  # [[1,2,3], [4,5,6], [7,99,9]]
 直接替换某一行的一维列表。
 
 ```python
-
 two_d_list = [[1,2], [3,4], [5,6]]
 two_d_list[1] = [10,20]  # 替换第1行
 print(two_d_list)  # [[1,2], [10,20], [5,6]]
@@ -228,7 +267,6 @@ print(two_d_list)  # [[1,2], [10,20], [5,6]]
 二维列表无直接“整列操作”语法，需遍历每行修改对应列的元素。
 
 ```python
-
 two_d_list = [[1,2], [3,4], [5,6]]
 col_idx = 0  # 要修改的列索引
 new_val = 88  # 新值
@@ -240,7 +278,6 @@ print(two_d_list)  # [[88,2], [88,4], [88,6]]
 ### （4）添加/删除行/列
 
 ```python
-
 two_d_list = [[1,2], [3,4]]
 # 1. 添加行（末尾添加）
 two_d_list.append([5,6])
@@ -266,7 +303,6 @@ print(two_d_list)  # [[1,0], [3,0], [5,0]]
 通过循环格式化输出，避免直接打印导致的格式混乱。
 
 ```python
-
 two_d_list = [[1,2,3], [4,5,6], [7,8,9]]
 # 方式1：每行打印一个列表
 for row in two_d_list:
@@ -285,26 +321,29 @@ for row in two_d_list:
 
 # 四、一维与二维列表的关联与区别
 
-|维度|核心结构|元素定位|创建方式（推荐）|核心操作差异|应用场景|
-|---|---|---|---|---|---|
-|一维列表|单个元素的有序集合|单索引：list[i]|字面量、列表推导式|支持切片、直接增删改元素|存储线性数据（如成绩、名称列表）|
-|二维列表|一维列表的嵌套集合|双索引：list[i][j]|嵌套列表推导式|无直接切片/列操作，需循环处理|存储表格数据（如学生成绩表、矩阵）|
+| 维度   | 核心结构      | 元素定位           | 创建方式（推荐）  | 核心操作差异          | 应用场景              |
+| ---- | --------- | -------------- | --------- | --------------- | ----------------- |
+| 一维列表 | 单个元素的有序集合 | 单索引：list[i]    | 字面量、列表推导式 | 支持切片、直接增删改元素    | 存储线性数据（如成绩、名称列表）  |
+| 二维列表 | 一维列表的嵌套集合 | 双索引：list[i][j] | 嵌套列表推导式   | 无直接切片/列操作，需循环处理 | 存储表格数据（如学生成绩表、矩阵） |
+
 # 五、核心注意事项与易错点
 
 以下是开发中高频踩坑点，需重点关注：
 
 0. **索引越界问题**：访问索引时，索引值不能超过“长度-1”，否则报`IndexError`。例如一维列表`[1,2,3]`的最大索引是2，访问索引3会报错。
 
-0. **浅拷贝陷阱**：
+1. **浅拷贝陷阱**：
+   
           一维列表：`list2 = list1`是引用赋值，修改list2会影响list1；需用`list2 = list1.copy()`或`list2 = list(list1)`实现浅拷贝。
 
-0. 二维列表：嵌套推导式是唯一安全的动态创建方式，避免`[[0]*n]*m`的写法。
+2. 二维列表：嵌套推导式是唯一安全的动态创建方式，避免`[[0]*n]*m`的写法。
 
-0. **列表的可变性**：列表是可变序列，`append()`、`sort()`等方法会直接修改原列表，无返回值；而`sorted(list)`、`list.copy()`会返回新列表，不修改原列表。
+3. **列表的可变性**：列表是可变序列，`append()`、`sort()`等方法会直接修改原列表，无返回值；而`sorted(list)`、`list.copy()`会返回新列表，不修改原列表。
 
-0. **混合类型的影响**：列表支持混合类型，但会导致排序（`sort()`）失败，因为不同类型无法比较（如整数和字符串）。
+4. **混合类型的影响**：列表支持混合类型，但会导致排序（`sort()`）失败，因为不同类型无法比较（如整数和字符串）。
 
-0. **二维列表的“不规则性”**：Python二维列表无需每行长度一致，可创建“不规则二维列表”，但会增加后续处理复杂度，建议保持行列整齐。
+5. **二维列表的“不规则性”**：Python二维列表无需每行长度一致，可创建“不规则二维列表”，但会增加后续处理复杂度，建议保持行列整齐。
+   
           `irregular_list = [[1,2], [3], [4,5,6]]  # 合法但不推荐`
 
 # 六、总结
@@ -316,4 +355,5 @@ Python列表是一维与二维数组的核心实现载体，其核心特性是�
 2. 二维列表是一维的延伸，核心是“双索引定位”和“循环处理列操作”，避免浅拷贝陷阱是关键。
 
 3. 实际开发中，简单线性数据用一维列表，表格/矩阵类数据用二维列表；若需高性能数值计算，可结合`numpy`库的`ndarray`类型（支持向量化运算，效率更高）。
-> （注：文档部分内容可能由 AI 生成）
+   
+   > 
