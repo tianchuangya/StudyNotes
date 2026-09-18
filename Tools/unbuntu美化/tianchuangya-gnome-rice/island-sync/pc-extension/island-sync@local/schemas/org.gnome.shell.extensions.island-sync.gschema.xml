@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.island-sync" path="/org/gnome/shell/extensions/island-sync/">
+    <key name="gitee-owner" type="s">
+      <default>''</default>
+      <summary>Gitee 用户名/组织</summary>
+    </key>
+    <key name="gitee-repo" type="s">
+      <default>''</default>
+      <summary>Gitee 仓库名</summary>
+    </key>
+    <key name="gitee-branch" type="s">
+      <default>'master'</default>
+      <summary>分支</summary>
+    </key>
+    <key name="gitee-path" type="s">
+      <default>'island.json'</default>
+      <summary>仓库内 JSON 文件路径</summary>
+    </key>
+    <key name="gitee-token" type="s">
+      <default>''</default>
+      <summary>Gitee 私人令牌（私有仓库必填）</summary>
+    </key>
+    <key name="poll-interval" type="i">
+      <default>10</default>
+      <summary>轮询间隔（秒）</summary>
+    </key>
+    <key name="island-duration" type="i">
+      <default>6</default>
+      <summary>灵动岛展示时长（秒）</summary>
+    </key>
+    <key name="clipboard-sync" type="b">
+      <default>true</default>
+      <summary>同步手机剪贴板到电脑</summary>
+    </key>
+    <key name="launch-map" type="s">
+      <default>'{"wechat": "gtk-launch wechat", "qq": "gtk-launch qq"}'</default>
+      <summary>应用标识到启动命令的映射（JSON）</summary>
+    </key>
+    <key name="watch-apps" type="s">
+      <default>'[]'</default>
+      <summary>电脑端额外过滤（JSON 数组，空数组=接受手机端已筛选通知）</summary>
+    </key>
+  </schema>
+</schemalist>

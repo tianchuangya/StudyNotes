@@ -1,0 +1,7 @@
+{
+  "uuid": "curtain-wallpaper@local",
+  "name": "Curtain Wallpaper Switcher",
+  "description": "Floating glass ball: click to switch wallpaper, drag to move, right-click for a quick menu (wallpaper, clipboard, lock screen).",
+  "shell-version": ["46"],
+  "version": 2
+}

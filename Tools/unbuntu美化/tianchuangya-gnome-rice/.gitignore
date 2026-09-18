@@ -1,0 +1,31 @@
+# Local secrets
+.env
+.env.local
+*.local
+**/publish.conf
+**/config.json
+**/*token*
+**/*secret*
+
+# User-data backups and generated archives
+user-data-backups/
+*.tar
+*.tar.gz
+*.tar.zst
+*.tar.zst.enc
+*.sha256
+
+# Android generated files
+**/.gradle/
+**/build/
+**/local.properties
+
+# Runtime / exported snapshots
+runtime-state/
+configs/dconf/user-*.ini
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~

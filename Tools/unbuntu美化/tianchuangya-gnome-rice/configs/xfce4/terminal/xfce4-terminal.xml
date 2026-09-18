@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-terminal" version="1.0">
+  <property name="background-mode" type="string" value="TERMINAL_BACKGROUND_IMAGE"/>
+  <property name="background-image-file" type="string" value="/home/tianchuangya/.local/share/codex-gnome-liquid-glass/current-desktop-wallpaper"/>
+  <property name="title-initial" type="string" value="tianchuangya终端"/>
+  <property name="misc-copy-on-select" type="bool" value="true"/>
+  <property name="misc-cursor-shape" type="string" value="TERMINAL_CURSOR_SHAPE_IBEAM"/>
+  <property name="background-image-style" type="string" value="TERMINAL_BACKGROUND_STYLE_FILLED"/>
+  <property name="misc-menubar-default" type="bool" value="false"/>
+  <property name="misc-borders-default" type="bool" value="true"/>
+  <property name="misc-toolbar-default" type="bool" value="false"/>
+  <property name="title-mode" type="string" value="TERMINAL_TITLE_HIDE"/>
+  <property name="background-image-shading" type="double" value="0.57999999999999996"/>
+  <property name="misc-slim-tabs" type="bool" value="true"/>
+  <property name="color-foreground" type="string" value="#ffffff"/>
+  <property name="color-background" type="string" value="#000000"/>
+  <property name="color-background-vary" type="bool" value="false"/>
+  <property name="color-cursor-foreground" type="string" value="#9999c1c1f1f1"/>
+  <property name="color-cursor" type="string" value="#9999c1c1f1f1"/>
+  <property name="color-cursor-use-default" type="bool" value="false"/>
+  <property name="color-selection" type="string" value="#ffffbebe6f6f"/>
+  <property name="color-selection-background" type="string" value="#ffffbebe6f6f"/>
+  <property name="color-selection-use-default" type="bool" value="true"/>
+  <property name="color-bold" type="string" value=""/>
+  <property name="color-bold-use-default" type="bool" value="true"/>
+  <property name="color-palette" type="string" value="rgb(0,0,0);rgb(246,97,81);rgb(78,154,6);rgb(196,160,0);rgb(153,193,241);rgb(117,80,123);rgb(153,193,241);rgb(211,215,207);rgb(143,240,164);rgb(246,97,81);rgb(138,226,52);rgb(252,233,79);rgb(28,113,216);rgb(173,127,168);rgb(52,226,226);rgb(238,238,236)"/>
+  <property name="color-bold-is-bright" type="bool" value="true"/>
+  <property name="color-use-theme" type="bool" value="false"/>
+  <property name="tab-activity-color" type="string" value="#aa0000"/>
+  <property name="misc-confirm-close" type="bool" value="false"/>
+</channel>

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+wallpaper_dir="$HOME/壁纸"
+active_link="$HOME/.local/share/codex-gnome-liquid-glass/current-app-wallpaper"
+
+mapfile -d '' wallpapers < <(
+  find "$wallpaper_dir" -maxdepth 1 -type f \
+    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+    -print0
+)
+
+if (( ${#wallpapers[@]} == 0 )); then
+  echo "没有在 $wallpaper_dir 找到图片。"
+  exit 1
+fi
+
+candidates=("${wallpapers[@]}")
+if (( ${#wallpapers[@]} > 1 )) && [[ -L "$active_link" ]]; then
+  current="$(readlink -f "$active_link")"
+  candidates=()
+  for wallpaper in "${wallpapers[@]}"; do
+    [[ "$(readlink -f "$wallpaper")" == "$current" ]] || candidates+=("$wallpaper")
+  done
+fi
+
+selected="${candidates[RANDOM % ${#candidates[@]}]}"
+ln -sfn "$selected" "$active_link"
+echo "应用背景已切换到：$selected"
+

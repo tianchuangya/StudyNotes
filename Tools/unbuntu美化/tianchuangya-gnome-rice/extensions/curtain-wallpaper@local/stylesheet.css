@@ -1,0 +1,58 @@
+.curtain-wallpaper-ball {
+  padding: 4px;
+  margin: 0;
+  border-radius: 999px;
+  background-color: rgba(18, 24, 36, 0.20);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.20),
+              0 0 12px rgba(255, 255, 255, 0.25),
+              0 5px 14px rgba(0, 0, 0, 0.28);
+}
+
+.curtain-wallpaper-ball:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.90);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.30),
+              0 0 16px rgba(255, 255, 255, 0.46),
+              0 6px 16px rgba(0, 0, 0, 0.30);
+}
+
+.curtain-wallpaper-thumbnail {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.32),
+              0 0 7px rgba(255, 255, 255, 0.30),
+              0 1px 3px rgba(0, 0, 0, 0.32);
+}
+
+.curtain-wallpaper-ball:hover .curtain-wallpaper-thumbnail {
+  border-color: white;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.48),
+              0 0 10px rgba(255, 255, 255, 0.52);
+}
+
+.curtain-wallpaper-clipboard-button {
+  padding: 4px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.96);
+  background-color: rgba(26, 34, 50, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.22),
+              0 0 8px rgba(255, 255, 255, 0.36),
+              0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.curtain-wallpaper-clipboard-button:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  border-color: white;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.34),
+              0 0 11px rgba(255, 255, 255, 0.58);
+}
+
+.curtain-wallpaper-clipboard-icon {
+  icon-size: 15px;
+}

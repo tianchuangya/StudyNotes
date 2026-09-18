@@ -1,0 +1,95 @@
+/* Shared anime-glass background for GTK4/libadwaita system applications. */
+window.background {
+  background-color: rgba(10, 14, 22, 0.46);
+  background-image: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.14),
+                    rgba(255, 255, 255, 0.025) 28%,
+                    rgba(0, 0, 0, 0.06) 72%,
+                    rgba(255, 255, 255, 0.10));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24),
+              inset 2px -2px 2px rgba(255, 255, 255, 0.22),
+              inset -2px 2px 2px rgba(255, 255, 255, 0.13),
+              inset 0 0 12px rgba(255, 255, 255, 0.10);
+}
+
+window.background .view,
+window.background preferencespage,
+window.background navigation-view,
+window.background scrolledwindow,
+window.background viewport,
+window.background listview,
+window.background gridview,
+window.background columnview {
+  background-color: rgba(10, 14, 22, 0.32);
+}
+
+/* 液态玻璃 headerbar：中心更透、边缘 1px 亮边 + 四向内高光（edge rim）。 */
+window.background headerbar {
+  background-color: rgba(13, 17, 26, 0.40);
+  background-image: linear-gradient(110deg,
+                    rgba(255, 255, 255, 0.17),
+                    transparent 36%,
+                    rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30),
+              inset 1px 0 0 rgba(255, 255, 255, 0.10),
+              inset -1px 0 0 rgba(255, 255, 255, 0.10),
+              inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+              inset 0 -2px 3px rgba(0, 0, 0, 0.12);
+}
+
+window.background placessidebar,
+window.background sidebar,
+window.background .sidebar,
+window.background .navigation-sidebar,
+window.background navigation-sidebar,
+window.background list.navigation-sidebar,
+window.background navigation-split-view,
+window.background leaflet,
+window.background toolbarview,
+window.background clamp {
+  background-color: rgba(12, 16, 25, 0.38);
+  background-image: none;
+}
+
+/* More specific Nautilus tuning. */
+window.nautilus-window,
+window.background.nautilus-window {
+  background-color: rgba(9, 12, 18, 0.30);
+  background-image: url("file:///home/tianchuangya/.local/share/codex-gnome-liquid-glass/current-app-wallpaper");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+              inset 0 0 14px rgba(255, 255, 255, 0.15);
+}
+
+.nautilus-window .view,
+.nautilus-window gridview,
+.nautilus-window listview,
+.nautilus-window columnview,
+.nautilus-window scrolledwindow,
+.nautilus-window viewport {
+  background-color: rgba(10, 14, 22, 0.30);
+}
+
+.nautilus-window placessidebar,
+.nautilus-window .sidebar-pane {
+  background-color: rgba(12, 16, 25, 0.38);
+}
+
+.nautilus-window headerbar {
+  background-color: rgba(15, 19, 29, 0.42);
+}
+
+.nautilus-window gridview child:hover,
+.nautilus-window listview row:hover {
+  background-color: rgba(126, 188, 255, 0.20);
+}
+
+.nautilus-window gridview child:selected,
+.nautilus-window listview row:selected {
+  background-color: rgba(91, 164, 255, 0.38);
+}

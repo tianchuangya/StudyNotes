@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="14dp">
+
+        <!-- 顶部标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="灵动岛同步"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="手机 ↔ 电脑 通知与剪贴板互通 · 由 是天创呀 制作"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <!-- ========== ① 开始使用 · 权限设置 ========== -->
+        <TextView
+            style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/section_setup" />
+
+        <LinearLayout style="@style/Card">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/note_bg"
+                android:padding="10dp"
+                android:text="@string/autostart_note"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_grant_listener"
+                    style="@style/PrimaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/grant_listener" />
+
+                <Button
+                    android:id="@+id/btn_start_service"
+                    style="@style/PrimaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/start_service" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_manage_apps"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/manage_apps" />
+
+                <Button
+                    android:id="@+id/btn_diagnose"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/diagnose_listener" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_app_detail"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/open_app_detail_settings" />
+
+                <Button
+                    android:id="@+id/btn_battery"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/open_battery_settings" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ========== ② Gitee 仓库 ========== -->
+        <TextView
+            style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/section_gitee" />
+
+        <LinearLayout style="@style/Card">
+
+            <EditText
+                android:id="@+id/et_owner"
+                style="@style/FieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:hint="@string/hint_owner"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/et_repo"
+                style="@style/FieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/hint_repo"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_branch"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_branch"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/et_path"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="2"
+                    android:hint="@string/hint_path"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_token"
+                style="@style/FieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/hint_token"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/et_watch"
+                style="@style/FieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/hint_watch"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_save"
+                    style="@style/PrimaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/save" />
+
+                <Button
+                    android:id="@+id/btn_test_push"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/test_push" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ========== 关于 ========== -->
+        <TextView
+            style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="关于" />
+
+        <LinearLayout style="@style/Card">
+
+            <Button
+                android:id="@+id/btn_about"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:text="@string/about_author" />
+        </LinearLayout>
+
+        <!-- ========== 检查更新（置于最下） ========== -->
+        <TextView
+            style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/section_update" />
+
+        <LinearLayout style="@style/Card">
+
+            <EditText
+                android:id="@+id/et_update_url"
+                style="@style/FieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:hint="@string/hint_update_url"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_check_update"
+                    style="@style/PrimaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/check_update" />
+
+                <Button
+                    android:id="@+id/btn_reset_update_url"
+                    style="@style/SecondaryButton"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/reset_default" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 页脚署名 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/footer_credit"
+            android:textColor="@color/text_hint"
+            android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>

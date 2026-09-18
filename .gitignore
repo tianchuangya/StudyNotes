@@ -1,0 +1,15 @@
+# Android/Gradle generated files
+**/.gradle/
+**/build/
+**/local.properties
+
+# IDE metadata
+**/.idea/
+*.iml
+
+# Local release credentials
+**/publish.conf
+
+# Common operating-system metadata
+.DS_Store
+Thumbs.db

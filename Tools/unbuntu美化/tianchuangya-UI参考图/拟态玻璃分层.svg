@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="520" viewBox="0 0 980 520">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#172033"/><stop offset=".5" stop-color="#684f88"/><stop offset="1" stop-color="#293952"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#fff" stop-opacity=".18"/><stop offset=".3" stop-color="#fff" stop-opacity=".025"/>
+      <stop offset=".72" stop-color="#000" stop-opacity=".07"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="980" height="520" rx="28" fill="url(#bg)"/>
+  <circle cx="150" cy="130" r="95" fill="#ff7aad" opacity=".38"/>
+  <circle cx="830" cy="410" r="125" fill="#82d8ff" opacity=".34"/>
+  <rect x="160" y="105" width="660" height="310" rx="42" fill="#0a0e16" fill-opacity=".46" stroke="#fff" stroke-opacity=".48" stroke-width="2" filter="url(#glow)"/>
+  <rect x="162" y="107" width="656" height="306" rx="40" fill="url(#glass)" stroke="#fff" stroke-opacity=".18"/>
+  <path d="M190 180 Q490 85 790 175" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="3"/>
+  <text x="490" y="230" text-anchor="middle" fill="#fff" font-size="31" font-family="sans-serif">应用自身拟态玻璃</text>
+  <text x="490" y="278" text-anchor="middle" fill="#dce8ff" font-size="20" font-family="sans-serif">无桌面图片采样 · 半透明底 · 对角反光</text>
+  <text x="490" y="315" text-anchor="middle" fill="#dce8ff" font-size="20" font-family="sans-serif">内边高光 · 深色折射阴影 · 细白边缘泛光</text>
+  <g font-family="sans-serif" font-size="17" fill="#fff">
+    <text x="82" y="475">正确：只显示真实后方内容</text><text x="664" y="475">避免：始终穿透到桌面壁纸</text>
+  </g>
+</svg>

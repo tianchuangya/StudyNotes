@@ -1,0 +1,14 @@
+# GitHub 更新仓库配置（本文件填写后改名为 publish.conf）
+#
+# 1. 在 GitHub 新建仓库（建议 public，例如 island-sync-updates）
+#    不要初始化 README 也行，发布脚本会自动创建 update.json
+# 2. 生成 Personal Access Token：
+#    https://github.com/settings/tokens → Fine-grained token
+#    → Repository access 选这个仓库
+#    → Permissions: Contents = Read and write
+# 3. 填写下面三项后，运行 ./publish-update.sh --notes "说明"
+
+GITHUB_OWNER="你的GitHub用户名"
+GITHUB_REPO="island-sync-updates"
+GITHUB_TOKEN="github_pat_xxxxxxxx"
+UPDATE_BRANCH="main"

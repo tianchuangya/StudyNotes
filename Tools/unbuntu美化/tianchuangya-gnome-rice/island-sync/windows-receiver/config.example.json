@@ -1,0 +1,9 @@
+{
+  "gitee_owner": "你的Gitee用户名",
+  "gitee_repo": "你的仓库名",
+  "gitee_branch": "master",
+  "gitee_path": "island.json",
+  "gitee_token": "私有仓库才需要",
+  "interval": 10,
+  "clipboard_sync": true
+}

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+wallpaper_dir="$HOME/壁纸"
+active_link="$HOME/.local/share/codex-gnome-liquid-glass/current-desktop-wallpaper"
+
+mapfile -d '' wallpapers < <(
+  find "$wallpaper_dir" -maxdepth 1 -type f \
+    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+    -print0
+)
+
+if (( ${#wallpapers[@]} == 0 )); then
+  echo "没有在 $wallpaper_dir 找到图片。"
+  exit 1
+fi
+
+selected="${wallpapers[RANDOM % ${#wallpapers[@]}]}"
+if (( ${#wallpapers[@]} > 1 )) && [[ -L "$active_link" ]]; then
+  current="$(readlink -f "$active_link")"
+  candidates=()
+  for wallpaper in "${wallpapers[@]}"; do
+    [[ "$(readlink -f "$wallpaper")" == "$current" ]] || candidates+=("$wallpaper")
+  done
+  selected="${candidates[RANDOM % ${#candidates[@]}]}"
+fi
+uri="$(python3 -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve().as_uri())' "$selected")"
+
+ln -sfn "$selected" "$active_link"
+gsettings set org.gnome.desktop.background picture-uri "$uri"
+gsettings set org.gnome.desktop.background picture-uri-dark "$uri"
+gsettings set org.gnome.desktop.background picture-options 'zoom'
+
+echo "已切换到：$selected"
+

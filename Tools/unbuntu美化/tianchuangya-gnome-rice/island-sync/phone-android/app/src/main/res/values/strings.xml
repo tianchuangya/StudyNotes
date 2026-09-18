@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">灵动岛同步</string>
+    <string name="about_author">关于作者</string>
+    <string name="author_name">是天创呀</string>
+    <string name="about_content">灵动岛同步 Island Sync\n作者：是天创呀\n\n手机 ↔ 电脑 的通知与剪贴板互通，\n灵动岛风格弹窗，基于 Gitee 中转。\n\n© 2026 是天创呀 · 保留所有权利\n转载请注明作者与出处</string>
+    <string name="footer_credit">由 是天创呀 独立制作 · © 2026</string>
+    <string name="channel_name">灵动岛同步服务</string>
+    <string name="service_title">灵动岛同步运行中</string>
+    <string name="service_text">正在同步手机通知与剪贴板到电脑</string>
+    <string name="hint_owner">Gitee 用户名 / 组织</string>
+    <string name="hint_repo">Gitee 仓库名</string>
+    <string name="hint_branch">分支（默认 master）</string>
+    <string name="hint_path">文件路径（默认 island.json）</string>
+    <string name="hint_token">Gitee 私人令牌（必填，用于提交）</string>
+    <string name="hint_watch">监听的应用包名（逗号分隔，默认微信/QQ/TIM）</string>
+    <string name="manage_apps">管理同步应用</string>
+    <string name="diagnose_listener">通知监听诊断</string>
+    <string name="open_app_detail_settings">打开应用详情/权限设置</string>
+    <string name="open_battery_settings">打开电池优化设置</string>
+    <string name="backup_settings">备份配置到加密存档</string>
+    <string name="restore_settings">从加密存档恢复配置</string>
+    <string name="backup_ok">配置已加密备份到 Documents/IslandSync</string>
+    <string name="backup_failed">备份失败，请检查系统文件权限</string>
+    <string name="restore_ok">已从加密存档恢复配置</string>
+    <string name="restore_failed">没有可用备份，或备份不是这台手机生成的</string>
+    <string name="auto_restore_ok">已自动从加密存档恢复之前的配置</string>
+    <string name="save">保存配置</string>
+    <string name="saved">已保存</string>
+    <string name="grant_listener">① 授权读取系统通知</string>
+    <string name="start_service">② 启动常驻后台服务</string>
+    <string name="service_started">服务已启动，建议在最近任务里锁定本应用</string>
+    <string name="test_push">③ 发送测试通知到电脑</string>
+    <string name="pushing">正在推送…</string>
+    <string name="push_ok">推送成功！几秒后电脑会弹出灵动岛</string>
+    <string name="push_failed">推送失败：检查令牌/仓库/网络</string>
+    <string name="need_repo">请先填写 Gitee 用户名和仓库名</string>
+    <string name="open_gitee">打开 Gitee 仓库页面</string>
+    <string name="share_not_configured">请先打开灵动岛同步完成配置</string>
+    <string name="share_pushing">正在同步剪贴板…</string>
+    <string name="share_done">剪贴板已同步到电脑</string>
+    <string name="share_failed">同步失败，请检查配置和网络</string>
+
+    <!-- 远程更新 -->
+    <string name="hint_update_url">更新源：GitHub 上 update.json 的直链（见 README）</string>
+    <string name="check_update">检查 App 更新（GitHub 远程更新）</string>
+    <string name="update_checking">正在检查更新…</string>
+    <string name="update_need_url">请先填写更新源 update.json 直链并保存</string>
+    <string name="already_latest">已是最新版本（当前 %1$s）</string>
+    <string name="update_available_title">发现新版本 v%1$s</string>
+    <string name="update_available_body">更新说明：\n%1$s\n\n将下载并校验 SHA256 后自动安装。</string>
+    <string name="update_download_install">下载并安装</string>
+    <string name="update_downloading">开始下载更新…</string>
+    <string name="update_progress">下载中 %1$d%%</string>
+    <string name="update_verifying_ok">下载完成，SHA256 校验通过，准备安装</string>
+    <string name="update_failed">更新失败：%1$s</string>
+    <string name="install_perm_needed">需要「安装未知应用」权限，请在接下来打开的页面中允许</string>
+
+    <!-- v1.3 调整 -->
+    <string name="default_update_url">https://raw.githubusercontent.com/tianchuangya/island-sync-updates/main/update.json</string>
+    <string name="reset_default">重置默认</string>
+    <string name="section_setup">① 开始使用 · 权限设置</string>
+    <string name="section_gitee">② Gitee 仓库</string>
+    <string name="section_update">检查更新</string>
+    <string name="autostart_note">⚠️ 必须开启「自启动」并允许后台运行，否则收不到消息提醒（小米/HyperOS 尤其严格：自启动 + 省电策略无限制 + 最近任务锁定，缺一不可）</string>
+    <string name="reset_done">已重置为默认更新源</string>
+    <string name="select_all">全选</string>
+    <string name="select_none">取消全选</string>
+    <string name="search_apps">搜索应用…</string>
+    <string name="sort_name">按名称</string>
+    <string name="sort_checked">已勾选优先</string>
+    <string name="sort_unchecked">未勾选优先</string>
+    <string name="sort_size">按应用大小</string>
+    <string name="refresh">刷新</string>
+
+</resources>

@@ -1,0 +1,9 @@
+{
+  "uuid": "island-sync@local",
+  "name": "Island Sync (灵动岛同步)",
+  "description": "Phone notifications & clipboard via a Gitee relay, shown as a Dynamic-Island style pill. 点击药丸展开卡片，可打开电脑端微信/QQ。",
+  "shell-version": ["46"],
+  "settings-schema": "org.gnome.shell.extensions.island-sync",
+  "version": 1,
+  "url": "https://gitee.com/"
+}
